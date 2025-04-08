@@ -1,0 +1,18 @@
+.baseNode {
+    transform-origin: center;
+    padding: 0.5rem;
+    border-radius: 25%;
+    min-width: 30px;
+    min-height: 30px;
+    cursor: pointer;
+    border: 2px solid black;
+    &[data-isactive="true"] {
+        border: 5px solid green;
+    }
+}
+.rootNode {
+    background-color: blue;
+}
+.node {
+    background-color: yellow;
+}
