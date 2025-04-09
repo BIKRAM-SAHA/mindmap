@@ -117,17 +117,16 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
 
     const removeNode = (currNodeId: string) => {
         setNodes((prevNodes) =>
-            prevNodes.filter((item) => {
-                return item.id === currNodeId || item.parent === currNodeId;
-            })
+            prevNodes.filter(
+                (item) => item.id !== currNodeId && item.parent !== currNodeId
+            )
         );
         setConnectors((prevConnectors) =>
-            prevConnectors.filter((item) => {
-                return (
-                    item.fromNodeId === currNodeId ||
-                    item.toNodeId === currNodeId
-                );
-            })
+            prevConnectors.filter(
+                (item) =>
+                    item.fromNodeId !== currNodeId &&
+                    item.toNodeId !== currNodeId
+            )
         );
     };
 

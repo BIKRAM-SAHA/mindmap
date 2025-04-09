@@ -77,7 +77,7 @@ function Canvas({}: Props) {
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
         };
-    }, []);
+    }, [activeNodeId]);
 
     return (
         <div
