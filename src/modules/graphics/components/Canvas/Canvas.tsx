@@ -23,7 +23,7 @@ function Canvas({}: Props) {
     } = useContext(MindMapContext) ?? {};
 
     if (
-        !activeNodeId ||
+        activeNodeId === undefined ||
         !nodes ||
         !connectors ||
         !addChild ||
@@ -34,19 +34,20 @@ function Canvas({}: Props) {
         throw new Error("MindMapContext not initiated properly");
 
     const handleAddChildNode = () => {
-        console.log("activeNode from method: ", activeNodeId);
-        addChild(activeNodeId);
+        const result = addChild(activeNodeId);
+        if (!result.success) console.error(result.message);
     };
 
     const handleAddSiblingNode = () => {
-        addSibling(activeNodeId);
+        const result = addSibling();
+        if (!result.success) console.error(result.message);
     };
     const handleDeleteNode = () => {
-        removeNode(activeNodeId);
+        removeNode();
     };
     const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
-        moveNode(activeNodeId, {
+        moveNode({
             x: e.pageX,
             y: e.pageY,
         });
@@ -65,7 +66,7 @@ function Canvas({}: Props) {
             switch (e.key) {
                 case "Enter":
                     if (e.shiftKey) handleAddSiblingNode();
-                    else handleAddChildNode();
+                    else if (e.ctrlKey) handleAddChildNode();
                     break;
                 case "Delete":
                     if (e.shiftKey) handleDeleteNode();
@@ -108,8 +109,8 @@ function Canvas({}: Props) {
                             id: item.id,
                             text: item.content,
                             position: {
-                                x: item.position.x,
-                                y: item.position.y,
+                                x: item.meta.position.x,
+                                y: item.meta.position.y,
                             },
                         }}
                         key={item.id}

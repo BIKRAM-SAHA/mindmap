@@ -6,7 +6,7 @@ import MindMapContext from "@contexts/MindMapContext";
 function BaseNode({ type, NodeData }: Props) {
     const { activeNodeId, changeActiveNodeId, onTextChange } =
         useContext(MindMapContext) ?? {};
-    if (!activeNodeId || !changeActiveNodeId || !onTextChange)
+    if (!changeActiveNodeId || !onTextChange)
         throw new Error("MindMapContext not initiated properly");
 
     const contentElemRef = useRef<HTMLTextAreaElement | null>(null);
@@ -60,7 +60,11 @@ function BaseNode({ type, NodeData }: Props) {
             <textarea
                 value={NodeData.text}
                 onChange={(e) => {
-                    onTextChange(activeNodeId, e.target.value);
+                    onTextChange(
+                        e.target.value,
+                        e.target.getBoundingClientRect().height,
+                        e.target.getBoundingClientRect().width
+                    );
                     adjustHeight(e.target);
                 }}
                 ref={contentElemRef}

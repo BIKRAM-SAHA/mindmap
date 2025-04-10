@@ -1,3 +1,4 @@
+import { Response } from "@modules/common/index.types";
 import { centerX, centerY } from "@modules/graphics/common/index.constants";
 import { AbsolutePoint } from "@modules/graphics/common/index.types";
 import { createContext, PropsWithChildren, useMemo, useState } from "react";
@@ -13,7 +14,11 @@ interface SimpleNode {
 type Node = (RootNode | SimpleNode) & {
     id: string;
     content: string;
-    position: AbsolutePoint;
+    meta: {
+        position: AbsolutePoint;
+        height: number;
+        width: number;
+    };
 };
 
 type Connector = {
@@ -26,13 +31,13 @@ type Connector = {
 export type MindMap = {
     nodes: Node[];
     connectors: Connector[];
-    activeNodeId: string;
+    activeNodeId: string | null;
     changeActiveNodeId: (newNodeId: string) => void;
-    onTextChange: (currNodeId: string, value: string) => void;
-    addChild: (currNodeId: string) => void;
-    removeNode: (currNodeId: string) => void;
-    addSibling: (currNodeId: string) => void;
-    moveNode: (currNodeId: string, endPosition: AbsolutePoint) => void;
+    onTextChange: (value: string, height: number, width: number) => void;
+    addChild: (currNodeId: string | null) => Response;
+    removeNode: () => void;
+    addSibling: () => Response;
+    moveNode: (endPosition: AbsolutePoint) => void;
 };
 
 const MindMapContext = createContext<MindMap | null>(null);
@@ -43,44 +48,65 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
             id: self.crypto.randomUUID(),
             type: "root",
             content: "Root",
-            position: { x: centerX, y: centerY },
+            meta: {
+                position: { x: centerX, y: centerY },
+                height: 10,
+                width: 10,
+            },
             parent: null,
         },
     ]);
     const [connectors, setConnectors] = useState<MindMap["connectors"]>([]);
-    const [activeNodeId, setActiveNodeId] = useState<string>(nodes[0].id);
+    const [activeNodeId, setActiveNodeId] = useState<string | null>(null);
 
     const changeActiveNodeId = (newNodeId: string) => {
-        console.log("nodeid changed: ", newNodeId);
         setActiveNodeId(newNodeId);
     };
 
-    const onTextChange = (currNodeId: string, value: string) => {
+    const onTextChange = (value: string, height: number, width: number) => {
         const currentNode: Node | undefined = nodes.find(
-            (item) => item.id === currNodeId
+            (item) => item.id === activeNodeId
         );
         if (!currentNode)
             throw new Error("MindMapContext: Invalid active node");
 
         setNodes((prevNodes) =>
             prevNodes.map((item) => {
-                if (item.id === currNodeId) return { ...item, content: value };
+                if (item.id === activeNodeId)
+                    return {
+                        ...item,
+                        content: value,
+                        meta: { ...item.meta, height: height, width: width },
+                    };
                 return item;
             })
         );
     };
 
-    const addChild = (currNodeId: string) => {
+    const addChild = (currNodeId: string | null): Response => {
+        if (!currNodeId) {
+            console.error("No NodeId selected");
+            return {
+                success: false,
+                message: "no node selected",
+            };
+        }
+
         const currentNode: Node | undefined = nodes.find(
             (item) => item.id === currNodeId
         );
-        if (!currentNode)
-            throw new Error("MindMapContext: Invalid active node");
+        if (!currentNode) {
+            console.error("Invalid NodeId selected");
+            return {
+                success: false,
+                message: "Something went wrong try again",
+            };
+        }
 
         const newNodeId = self.crypto.randomUUID();
         const newNodePosition: AbsolutePoint = {
-            x: currentNode.position.x,
-            y: currentNode.position.y,
+            x: currentNode.meta.position.x + currentNode.meta.width,
+            y: currentNode.meta.position.y + currentNode.meta.height,
         };
         setNodes((prevNodes) => [
             ...prevNodes,
@@ -88,7 +114,11 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
                 id: newNodeId,
                 type: "node",
                 content: "",
-                position: newNodePosition,
+                meta: {
+                    position: newNodePosition,
+                    height: 10,
+                    width: 10,
+                },
                 parent: currNodeId,
             },
         ]);
@@ -98,50 +128,74 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
                 id: `${currNodeId}-${newNodeId}`,
                 fromNodeId: currNodeId,
                 toNodeId: newNodeId,
-                fromPosition: currentNode.position,
+                fromPosition: currentNode.meta.position,
                 toPosition: newNodePosition,
             },
         ]);
+        return {
+            success: true,
+            data: null,
+        };
     };
 
-    const addSibling = (currNodeId: string) => {
+    const addSibling = (): Response => {
+        if (!activeNodeId) {
+            console.error("No NodeId selected");
+            return {
+                success: false,
+                message: "no node selected",
+            };
+        }
+
         const currentNode: Node | undefined = nodes.find(
-            (item) => item.id === currNodeId
+            (item) => item.id === activeNodeId
         );
-        if (!currentNode)
-            throw new Error("MindMapContext: Invalid active node");
-        if (!currentNode.parent)
-            throw new Error("Cannot add sibling of root node");
-        addChild(currentNode.parent);
+        if (!currentNode) {
+            console.error("Invalid active node");
+            return {
+                success: false,
+                message: "Something went wrong try again",
+            };
+        }
+        if (!currentNode.parent) {
+            console.error("Cannot add sibling of root node");
+            return {
+                success: false,
+                message: "cannot add sibling of root",
+            };
+        }
+
+        return addChild(currentNode.parent);
     };
 
-    const removeNode = (currNodeId: string) => {
+    const removeNode = () => {
         setNodes((prevNodes) =>
             prevNodes.filter(
-                (item) => item.id !== currNodeId && item.parent !== currNodeId
+                (item) =>
+                    item.id !== activeNodeId && item.parent !== activeNodeId
             )
         );
         setConnectors((prevConnectors) =>
             prevConnectors.filter(
                 (item) =>
-                    item.fromNodeId !== currNodeId &&
-                    item.toNodeId !== currNodeId
+                    item.fromNodeId !== activeNodeId &&
+                    item.toNodeId !== activeNodeId
             )
         );
     };
 
-    const moveNode = (currNodeId: string, endPosition: AbsolutePoint) => {
+    const moveNode = (endPosition: AbsolutePoint) => {
         setNodes((prevNodes) =>
             prevNodes.map((item) => {
-                if (item.id === currNodeId) item.position = endPosition;
+                if (item.id === activeNodeId) item.meta.position = endPosition;
                 return item;
             })
         );
         setConnectors((prevConnectors) =>
             prevConnectors.map((item) => {
-                if (item.fromNodeId === currNodeId)
+                if (item.fromNodeId === activeNodeId)
                     item.fromPosition = endPosition;
-                else if (item.toNodeId === currNodeId)
+                else if (item.toNodeId === activeNodeId)
                     item.toPosition = endPosition;
                 return item;
             })
