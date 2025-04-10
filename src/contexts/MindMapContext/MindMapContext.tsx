@@ -32,7 +32,7 @@ export type MindMap = {
     nodes: Node[];
     connectors: Connector[];
     activeNodeId: string | null;
-    changeActiveNodeId: (newNodeId: string) => void;
+    changeActiveNodeId: (newNodeId: string | null) => void;
     onTextChange: (value: string, height: number, width: number) => void;
     addChild: (currNodeId: string | null) => Response;
     removeNode: () => void;
@@ -59,7 +59,7 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
     const [connectors, setConnectors] = useState<MindMap["connectors"]>([]);
     const [activeNodeId, setActiveNodeId] = useState<string | null>(null);
 
-    const changeActiveNodeId = (newNodeId: string) => {
+    const changeActiveNodeId = (newNodeId: string | null) => {
         setActiveNodeId(newNodeId);
     };
 

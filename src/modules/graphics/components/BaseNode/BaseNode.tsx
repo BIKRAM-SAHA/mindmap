@@ -43,7 +43,8 @@ function BaseNode({ type, NodeData }: Props) {
                 styles.baseNode,
                 type === "node" ? `${styles.node}` : `${styles.rootNode}`,
             ].join(" ")}
-            onClick={() => {
+            onClick={(e) => {
+                e.stopPropagation();
                 changeActiveNodeId(NodeData.id);
             }}
             onDoubleClick={() => {

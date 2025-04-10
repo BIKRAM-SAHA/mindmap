@@ -16,6 +16,7 @@ function Canvas({}: Props) {
         activeNodeId,
         nodes,
         connectors,
+        changeActiveNodeId,
         addChild,
         addSibling,
         removeNode,
@@ -26,6 +27,7 @@ function Canvas({}: Props) {
         activeNodeId === undefined ||
         !nodes ||
         !connectors ||
+        !changeActiveNodeId ||
         !addChild ||
         !addSibling ||
         !removeNode ||
@@ -73,10 +75,16 @@ function Canvas({}: Props) {
                     break;
             }
         };
+        const handleClick = (e: MouseEvent) => {
+            e.preventDefault();
+            changeActiveNodeId(null);
+        };
         window.addEventListener("keydown", handleKeyDown);
+        window.addEventListener("click", handleClick);
 
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
+            window.removeEventListener("click", handleClick);
         };
     }, [activeNodeId]);
 
