@@ -1,4 +1,5 @@
 import { useContext, useEffect } from "react";
+import { notifyError } from "@modules/notifications";
 import Path from "../Path/Path";
 import styles from "./Canvas.module.css";
 import BaseNode from "../BaseNode/BaseNode";
@@ -37,12 +38,12 @@ function Canvas({}: Props) {
 
     const handleAddChildNode = () => {
         const result = addChild(activeNodeId);
-        if (!result.success) console.error(result.message);
+        if (!result.success) notifyError(result.message);
     };
 
     const handleAddSiblingNode = () => {
         const result = addSibling();
-        if (!result.success) console.error(result.message);
+        if (!result.success) notifyError(result.message);
     };
     const handleDeleteNode = () => {
         removeNode();
