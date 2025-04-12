@@ -88,7 +88,7 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
             console.error("No NodeId selected");
             return {
                 success: false,
-                message: "no node selected",
+                message: "No node selected",
             };
         }
 
@@ -143,7 +143,7 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
             console.error("No NodeId selected");
             return {
                 success: false,
-                message: "no node selected",
+                message: "No node selected",
             };
         }
 
@@ -161,7 +161,7 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
             console.error("Cannot add sibling of root node");
             return {
                 success: false,
-                message: "cannot add sibling of root",
+                message: "Cannot add sibling of root",
             };
         }
 
