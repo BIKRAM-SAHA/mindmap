@@ -121,6 +121,8 @@ function Canvas({}: Props) {
                                 x: item.meta.position.x,
                                 y: item.meta.position.y,
                             },
+                            height: item.meta.height,
+                            width: item.meta.width
                         }}
                         key={item.id}
                     />

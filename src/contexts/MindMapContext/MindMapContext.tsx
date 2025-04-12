@@ -50,8 +50,8 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
             content: "Root",
             meta: {
                 position: { x: centerX, y: centerY },
-                height: 10,
-                width: 10,
+                height: 0,
+                width: 0,
             },
             parent: null,
         },
@@ -69,14 +69,17 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
         );
         if (!currentNode)
             throw new Error("MindMapContext: Invalid active node");
-
         setNodes((prevNodes) =>
             prevNodes.map((item) => {
                 if (item.id === activeNodeId)
                     return {
                         ...item,
                         content: value,
-                        meta: { ...item.meta, height: height, width: width },
+                        meta: {
+                            ...item.meta,
+                            height: height,
+                            width: width,
+                        },
                     };
                 return item;
             })
@@ -116,8 +119,8 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
                 content: "",
                 meta: {
                     position: newNodePosition,
-                    height: 10,
-                    width: 10,
+                    height: 0,
+                    width: 0,
                 },
                 parent: currNodeId,
             },

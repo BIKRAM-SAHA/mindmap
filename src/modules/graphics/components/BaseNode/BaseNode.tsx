@@ -17,10 +17,6 @@ function BaseNode({ type, NodeData }: Props) {
 
     const { y: ypos, x: xpos } = NodeData.position;
 
-    const adjustHeight = (el: HTMLTextAreaElement) => {
-        el.style.height = el.scrollHeight + "px";
-    };
-
     useEffect(() => {
         if (editEnabled === true) {
             contentElemRef?.current?.focus();
@@ -61,15 +57,17 @@ function BaseNode({ type, NodeData }: Props) {
             <textarea
                 value={NodeData.text}
                 onChange={(e) => {
-                    onTextChange(
-                        e.target.value,
-                        e.target.getBoundingClientRect().height,
-                        e.target.getBoundingClientRect().width
-                    );
-                    adjustHeight(e.target);
+                    e.target.style.height = "auto";
+                    const newHeight = e.target.scrollHeight;
+                    e.target.style.width = "auto";
+                    const newWidth = e.target.scrollWidth;
+                    e.target.style.height = newHeight + "px";
+                    e.target.style.width = newWidth + "px";
+                    onTextChange(e.target.value, newHeight, newWidth);
                 }}
                 ref={contentElemRef}
                 readOnly={!editEnabled}
+                className={styles.textArea}
             />
         </div>
     );

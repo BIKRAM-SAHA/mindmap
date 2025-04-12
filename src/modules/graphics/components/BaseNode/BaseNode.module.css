@@ -2,8 +2,6 @@
     transform-origin: center;
     padding: 0.5rem;
     border-radius: 25%;
-    min-width: 30px;
-    min-height: 30px;
     cursor: pointer;
     border: 2px solid black;
     &[data-isactive="true"] {
@@ -15,4 +13,9 @@
 }
 .node {
     background-color: yellow;
+}
+.textArea {
+    resize: none;
+    overflow: hidden;
+    white-space: nowrap;
 }

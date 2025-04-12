@@ -3,8 +3,10 @@ import { AbsolutePoint } from "@modules/graphics/common/index.types";
 export type BaseNodeElemProps = {
     type: "root" | "node";
     NodeData: {
-        id: string,
+        id: string;
         text: string;
         position: AbsolutePoint;
+        height: number;
+        width: number;
     };
 };
