@@ -2,6 +2,7 @@ import { Response } from "@modules/common/index.types";
 import { centerX, centerY } from "@modules/graphics/common/index.constants";
 import { AbsolutePoint } from "@modules/graphics/common/index.types";
 import { createContext, PropsWithChildren, useMemo, useState } from "react";
+import { DEFAULT_NODE_HEIGHT, DEFAULT_NODE_WIDTH } from "./MindMap.constants";
 
 interface RootNode {
     type: "root";
@@ -50,8 +51,8 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
             content: "Root",
             meta: {
                 position: { x: centerX, y: centerY },
-                height: 0,
-                width: 0,
+                height: DEFAULT_NODE_HEIGHT,
+                width: DEFAULT_NODE_WIDTH,
             },
             parent: null,
         },
@@ -78,8 +79,14 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
                         content: value,
                         meta: {
                             ...item.meta,
-                            height: height,
-                            width: width,
+                            height:
+                                height > DEFAULT_NODE_HEIGHT
+                                    ? height
+                                    : DEFAULT_NODE_HEIGHT,
+                            width:
+                                width > DEFAULT_NODE_WIDTH
+                                    ? width
+                                    : DEFAULT_NODE_WIDTH,
                         },
                     };
                 return item;
@@ -120,8 +127,8 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
                 content: "",
                 meta: {
                     position: newNodePosition,
-                    height: 0,
-                    width: 0,
+                    height: DEFAULT_NODE_HEIGHT,
+                    width: DEFAULT_NODE_WIDTH,
                 },
                 parent: currNodeId,
             },

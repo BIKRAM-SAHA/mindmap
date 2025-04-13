@@ -26,7 +26,12 @@ function BaseNode({ type, NodeData }: Props) {
             );
         }
     }, [editEnabled]);
-
+    useEffect(() => {
+        if (contentElemRef.current !== null) {
+            contentElemRef.current.style.height = NodeData.height + "px";
+            contentElemRef.current.style.width = NodeData.width + "px";
+        }
+    }, []);
     return (
         <div
             draggable
@@ -58,9 +63,17 @@ function BaseNode({ type, NodeData }: Props) {
                 value={NodeData.text}
                 onChange={(e) => {
                     e.target.style.height = "auto";
-                    const newHeight = e.target.scrollHeight;
+                    const scollHeight = e.target.scrollHeight;
                     e.target.style.width = "auto";
-                    const newWidth = e.target.scrollWidth;
+                    const scollWidth = e.target.scrollWidth;
+                    const newHeight =
+                        scollHeight > NodeData.height
+                            ? scollHeight
+                            : NodeData.height;
+                    const newWidth =
+                        scollWidth > NodeData.width
+                            ? scollWidth
+                            : NodeData.width;
                     e.target.style.height = newHeight + "px";
                     e.target.style.width = newWidth + "px";
                     onTextChange(e.target.value, newHeight, newWidth);
@@ -68,6 +81,8 @@ function BaseNode({ type, NodeData }: Props) {
                 ref={contentElemRef}
                 readOnly={!editEnabled}
                 className={styles.textArea}
+                rows={1}
+                cols={1}
             />
         </div>
     );
