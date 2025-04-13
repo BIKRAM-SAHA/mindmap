@@ -64,6 +64,7 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
     };
 
     const onTextChange = (value: string, height: number, width: number) => {
+        console.log(height);
         const currentNode: Node | undefined = nodes.find(
             (item) => item.id === activeNodeId
         );

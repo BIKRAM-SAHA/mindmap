@@ -17,5 +17,5 @@
 .textArea {
     resize: none;
     overflow: hidden;
-    white-space: nowrap;
+    white-space: pre;
 }
