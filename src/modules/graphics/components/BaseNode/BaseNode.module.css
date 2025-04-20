@@ -1,7 +1,5 @@
 .baseNode {
     transform-origin: center;
-    padding: 0.5rem;
-    border-radius: 25%;
     cursor: pointer;
     border: 2px solid black;
     &[data-isactive="true"] {
@@ -10,6 +8,7 @@
 }
 .rootNode {
     background-color: blue;
+    caret-color: blue;
 }
 .node {
     background-color: yellow;
@@ -18,4 +17,6 @@
     resize: none;
     overflow: hidden;
     white-space: pre;
+    outline: none;
+    border: none;
 }
