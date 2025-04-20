@@ -61,10 +61,6 @@ function Canvas({}: Props) {
     };
 
     useEffect(() => {
-        window.scrollTo(
-            centerX - window.innerWidth / 2,
-            centerY - window.innerHeight / 2
-        );
         const handleKeyDown = (e: KeyboardEvent) => {
             switch (e.key) {
                 case "Enter":
@@ -88,6 +84,13 @@ function Canvas({}: Props) {
             window.removeEventListener("click", handleClick);
         };
     }, [activeNodeId]);
+
+    useEffect(() => {
+        window.scrollTo(
+            centerX - window.innerWidth / 2,
+            centerY - window.innerHeight / 2
+        );
+    }, []);
 
     return (
         <div
@@ -122,7 +125,7 @@ function Canvas({}: Props) {
                                 y: item.meta.position.y,
                             },
                             height: item.meta.height,
-                            width: item.meta.width
+                            width: item.meta.width,
                         }}
                         key={item.id}
                     />
