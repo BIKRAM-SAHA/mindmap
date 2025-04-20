@@ -17,6 +17,6 @@ export const commands = [
     {
         title: "Delete node",
         keys: ["click", "shift", "delete"],
-        subTitle: "Click on node then shift + delete to add sibling node",
+        subTitle: "Click on node then shift + delete to delete node",
     },
 ];
