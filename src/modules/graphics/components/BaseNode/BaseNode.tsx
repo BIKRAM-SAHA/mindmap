@@ -4,15 +4,21 @@ import styles from "./BaseNode.module.css";
 import MindMapContext from "@contexts/MindMapContext";
 
 function BaseNode({ type, NodeData }: Props) {
-    const { activeNodeId, changeActiveNodeId, onTextChange } =
+    const { activeNodeId, changeActiveNodeId, onTextChange, removeNode } =
         useContext(MindMapContext) ?? {};
-    if (!changeActiveNodeId || !onTextChange)
+    if (!changeActiveNodeId || !onTextChange || !removeNode)
         throw new Error("MindMapContext not initiated properly");
 
     const contentElemRef = useRef<HTMLTextAreaElement | null>(null);
-    const [editEnabled, setEditEnabled] = useState(false);
+    const [editEnabled, setEditEnabled] = useState(
+        activeNodeId === NodeData.id
+    );
     const changeContentEditState = (value: boolean) => {
         setEditEnabled(value);
+    };
+    const removeNodeIfEmpty = () => {
+        if (!NodeData.text.length && activeNodeId !== NodeData.id)
+            removeNode(NodeData.id);
     };
 
     const { y: ypos, x: xpos } = NodeData.position;
@@ -32,6 +38,9 @@ function BaseNode({ type, NodeData }: Props) {
             contentElemRef.current.style.width = NodeData.width + "px";
         }
     }, []);
+    useEffect(() => {
+        removeNodeIfEmpty();
+    }, [activeNodeId]);
     return (
         <div
             draggable

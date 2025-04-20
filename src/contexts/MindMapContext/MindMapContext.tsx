@@ -35,9 +35,9 @@ export type MindMap = {
     activeNodeId: string | null;
     changeActiveNodeId: (newNodeId: string | null) => void;
     onTextChange: (value: string, height: number, width: number) => void;
-    addChild: (currNodeId: string | null) => Response;
-    removeNode: () => void;
-    addSibling: () => Response;
+    addChild: (currNodeId: string | null) => Response<string>;
+    removeNode: (nodeId: string) => void;
+    addSibling: () => Response<string>;
     moveNode: (endPosition: AbsolutePoint) => void;
 };
 
@@ -94,7 +94,7 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
         );
     };
 
-    const addChild = (currNodeId: string | null): Response => {
+    const addChild = (currNodeId: string | null): Response<string> => {
         if (!currNodeId) {
             console.error("No NodeId selected");
             return {
@@ -111,6 +111,13 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
             return {
                 success: false,
                 message: "Something went wrong try again",
+            };
+        }
+        if (!currentNode.content.length) {
+            console.error("Cannot add child of an empty node");
+            return {
+                success: false,
+                message: "Cannot add child of an empty node",
             };
         }
 
@@ -145,11 +152,11 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
         ]);
         return {
             success: true,
-            data: null,
+            data: newNodeId,
         };
     };
 
-    const addSibling = (): Response => {
+    const addSibling = (): Response<string> => {
         if (!activeNodeId) {
             console.error("No NodeId selected");
             return {
@@ -175,22 +182,26 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
                 message: "Cannot add sibling of root",
             };
         }
+        if (!currentNode.content.length) {
+            console.error("Cannot add sibling of an empty node");
+            return {
+                success: false,
+                message: "Cannot add sibling of an empty node",
+            };
+        }
 
         return addChild(currentNode.parent);
     };
 
-    const removeNode = () => {
+    const removeNode = (nodeId: string) => {
         setNodes((prevNodes) =>
             prevNodes.filter(
-                (item) =>
-                    item.id !== activeNodeId && item.parent !== activeNodeId
+                (item) => item.id !== nodeId && item.parent !== nodeId
             )
         );
         setConnectors((prevConnectors) =>
             prevConnectors.filter(
-                (item) =>
-                    item.fromNodeId !== activeNodeId &&
-                    item.toNodeId !== activeNodeId
+                (item) => item.fromNodeId !== nodeId && item.toNodeId !== nodeId
             )
         );
     };

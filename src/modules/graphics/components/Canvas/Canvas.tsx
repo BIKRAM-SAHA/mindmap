@@ -39,14 +39,20 @@ function Canvas({}: Props) {
     const handleAddChildNode = () => {
         const result = addChild(activeNodeId);
         if (!result.success) notifyError(result.message);
+        else changeActiveNodeId(result.data);
     };
 
     const handleAddSiblingNode = () => {
         const result = addSibling();
         if (!result.success) notifyError(result.message);
+        else changeActiveNodeId(result.data);
     };
     const handleDeleteNode = () => {
-        removeNode();
+        if (!activeNodeId) {
+            notifyError("Select a node to delete");
+            return;
+        }
+        removeNode(activeNodeId);
     };
     const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -83,7 +89,7 @@ function Canvas({}: Props) {
             window.removeEventListener("keydown", handleKeyDown);
             window.removeEventListener("click", handleClick);
         };
-    }, [activeNodeId]);
+    }, [activeNodeId, nodes]);
 
     useEffect(() => {
         window.scrollTo(
