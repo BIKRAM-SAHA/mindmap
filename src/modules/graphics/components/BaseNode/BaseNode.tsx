@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { BaseNodeElemProps as Props } from "./BaseNode.types";
 import styles from "./BaseNode.module.css";
 import MindMapContext from "@contexts/MindMapContext";
+import { notifyError } from "@modules/notifications";
 
 function BaseNode({ type, NodeData }: Props) {
     const { activeNodeId, changeActiveNodeId, onTextChange, removeNode } =
@@ -17,8 +18,14 @@ function BaseNode({ type, NodeData }: Props) {
         setEditEnabled(value);
     };
     const removeNodeIfEmpty = () => {
-        if (!NodeData.text.length && activeNodeId !== NodeData.id)
-            removeNode(NodeData.id);
+        if (
+            type != "root" &&
+            !NodeData.text.length &&
+            activeNodeId !== NodeData.id
+        ) {
+            const result = removeNode(NodeData.id);
+            if (!result.success) notifyError(result.message);
+        }
     };
 
     const { y: ypos, x: xpos } = NodeData.position;

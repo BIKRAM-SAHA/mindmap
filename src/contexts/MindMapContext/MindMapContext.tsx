@@ -36,7 +36,7 @@ export type MindMap = {
     changeActiveNodeId: (newNodeId: string | null) => void;
     onTextChange: (value: string, height: number, width: number) => void;
     addChild: (currNodeId: string | null) => Response<string>;
-    removeNode: (nodeId: string) => void;
+    removeNode: (nodeId: string) => Response<string>;
     addSibling: () => Response<string>;
     moveNode: (endPosition: AbsolutePoint) => void;
 };
@@ -193,7 +193,25 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
         return addChild(currentNode.parent);
     };
 
-    const removeNode = (nodeId: string) => {
+    const removeNode = (nodeId: string): Response<string> => {
+        const currentNode: Node | undefined = nodes.find(
+            (item) => item.id === nodeId
+        );
+        if (!currentNode) {
+            console.error("Invalid active node");
+            return {
+                success: false,
+                message: "Something went wrong try again",
+            };
+        }
+        if (!currentNode.parent) {
+            console.error("Cannot delete root node");
+            return {
+                success: false,
+                message: "Cannot delete root node",
+            };
+        }
+
         setNodes((prevNodes) =>
             prevNodes.filter(
                 (item) => item.id !== nodeId && item.parent !== nodeId
@@ -204,6 +222,10 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
                 (item) => item.fromNodeId !== nodeId && item.toNodeId !== nodeId
             )
         );
+        return {
+            success: true,
+            data: "Successfully deleted node",
+        };
     };
 
     const moveNode = (endPosition: AbsolutePoint) => {

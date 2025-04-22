@@ -52,7 +52,8 @@ function Canvas({}: Props) {
             notifyError("Select a node to delete");
             return;
         }
-        removeNode(activeNodeId);
+        const result = removeNode(activeNodeId);
+        if (!result.success) notifyError(result.message);
     };
     const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
