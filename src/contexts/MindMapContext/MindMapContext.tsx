@@ -3,6 +3,7 @@ import { centerX, centerY } from "@modules/graphics/common/index.constants";
 import { AbsolutePoint } from "@modules/graphics/common/index.types";
 import { createContext, PropsWithChildren, useMemo, useState } from "react";
 import { DEFAULT_NODE_HEIGHT, DEFAULT_NODE_WIDTH } from "./MindMap.constants";
+import { v4 as uuidv4 } from "uuid";
 
 interface RootNode {
     type: "root";
@@ -46,7 +47,7 @@ const MindMapContext = createContext<MindMap | null>(null);
 export const MindMapProvider = ({ children }: PropsWithChildren) => {
     const [nodes, setNodes] = useState<MindMap["nodes"]>([
         {
-            id: self.crypto.randomUUID(),
+            id: uuidv4(),
             type: "root",
             content: "Root",
             meta: {
