@@ -71,10 +71,12 @@ function Canvas({}: Props) {
         const handleKeyDown = (e: KeyboardEvent) => {
             switch (e.key) {
                 case "Enter":
+                    e.preventDefault();
                     if (e.shiftKey) handleAddSiblingNode();
                     else if (e.ctrlKey) handleAddChildNode();
                     break;
                 case "Delete":
+                    e.preventDefault();
                     if (e.shiftKey) handleDeleteNode();
                     break;
             }
