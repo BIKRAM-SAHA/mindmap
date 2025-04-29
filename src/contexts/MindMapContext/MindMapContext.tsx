@@ -213,14 +213,29 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
             };
         }
 
+        const nodesToDelete: Set<Node["id"]> = new Set();
+        nodesToDelete.add(nodeId);
+        nodes.forEach((item) => {
+            if (
+                nodesToDelete.has(item.parent ?? "") ||
+                nodesToDelete.has(item.id)
+            ) {
+                nodesToDelete.add(item.id);
+            }
+        }, []);
+
         setNodes((prevNodes) =>
             prevNodes.filter(
-                (item) => item.id !== nodeId && item.parent !== nodeId
+                (item) =>
+                    !nodesToDelete.has(item.id) &&
+                    !nodesToDelete.has(item.parent ?? "")
             )
         );
         setConnectors((prevConnectors) =>
             prevConnectors.filter(
-                (item) => item.fromNodeId !== nodeId && item.toNodeId !== nodeId
+                (item) =>
+                    !nodesToDelete.has(item.fromNodeId) &&
+                    !nodesToDelete.has(item.toNodeId)
             )
         );
         return {
