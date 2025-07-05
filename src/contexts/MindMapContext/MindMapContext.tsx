@@ -1,7 +1,15 @@
 import { Response } from "@modules/common/index.types";
-import { centerX, centerY } from "@modules/graphics/common/index.constants";
+import {
+    canvasWidth,
+    canvasHeight,
+} from "@modules/graphics/common/index.constants";
 import { AbsolutePoint } from "@modules/graphics/common/index.types";
-import { createContext, PropsWithChildren, useMemo, useState } from "react";
+import {
+    createContext,
+    PropsWithChildren,
+    useMemo,
+    useState,
+} from "react";
 import { DEFAULT_NODE_HEIGHT, DEFAULT_NODE_WIDTH } from "./MindMap.constants";
 import { v4 as uuidv4 } from "uuid";
 
@@ -51,7 +59,10 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
             type: "root",
             content: "Root",
             meta: {
-                position: { x: centerX, y: centerY },
+                position: {
+                    x: (canvasWidth) / 2,
+                    y: (canvasHeight) / 2,
+                },
                 height: DEFAULT_NODE_HEIGHT,
                 width: DEFAULT_NODE_WIDTH,
             },
@@ -122,7 +133,7 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
             };
         }
 
-        const newNodeId = self.crypto.randomUUID();
+        const newNodeId = uuidv4();
         const newNodePosition: AbsolutePoint = {
             x: currentNode.meta.position.x + currentNode.meta.width,
             y: currentNode.meta.position.y + currentNode.meta.height,

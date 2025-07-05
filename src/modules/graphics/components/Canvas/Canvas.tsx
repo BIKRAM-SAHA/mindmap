@@ -7,8 +7,6 @@ import { CanvasProps as Props } from "./Canvas.types";
 import {
     canvasHeight,
     canvasWidth,
-    centerX,
-    centerY,
 } from "@modules/graphics/common/index.constants";
 import MindMapContext from "@contexts/MindMapContext";
 
@@ -95,9 +93,11 @@ function Canvas({}: Props) {
     }, [activeNodeId, nodes]);
 
     useEffect(() => {
+        const centerX = (canvasWidth) / 2;
+        const centerY = (canvasHeight) / 2;
         window.scrollTo(
             centerX - window.innerWidth / 2,
-            centerY - window.innerHeight / 2
+            centerY - window.innerHeight / 2 
         );
     }, []);
 

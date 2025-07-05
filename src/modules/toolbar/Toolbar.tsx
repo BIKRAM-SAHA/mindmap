@@ -1,5 +1,5 @@
 import styles from "./Toolbar.module.css";
-import { topRightMenuTools } from "./Toolbar.constants";
+import { bottomRightMenuTools, topRightMenuTools } from "./Toolbar.constants";
 
 type Props = {};
 
@@ -8,6 +8,13 @@ function Toolbar({}: Props) {
         <>
             <div className={[styles.topRightMenu, styles.menu].join(" ")}>
                 {topRightMenuTools.map((item, index) => (
+                    <div key={index} className={styles.menuItem}>
+                        <item.component />
+                    </div>
+                ))}
+            </div>
+            <div className={[styles.bottomRightMenu, styles.menu].join(" ")}>
+                {bottomRightMenuTools.map((item, index) => (
                     <div key={index} className={styles.menuItem}>
                         <item.component />
                     </div>

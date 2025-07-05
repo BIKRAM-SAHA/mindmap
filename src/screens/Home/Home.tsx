@@ -1,12 +1,18 @@
 import { Canvas } from "@modules/graphics";
 import { HomeScreenProps as Props } from "./Home.types";
 import Toolbar from "@modules/toolbar";
+import { PanZoomContextProvider } from "@contexts/PanZoomContext";
+import { MindMapProvider } from "@contexts/MindMapContext";
 
-function Home({}: Props) {
+function Home({ }: Props) {
     return (
         <>
-            <Canvas />
-            <Toolbar />
+            <PanZoomContextProvider>
+                <MindMapProvider>
+                    <Canvas />
+                    <Toolbar />
+                </MindMapProvider>
+            </PanZoomContextProvider>
         </>
     );
 }
