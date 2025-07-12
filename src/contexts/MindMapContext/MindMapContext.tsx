@@ -122,7 +122,7 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
             };
         }
 
-        const newNodeId = self.crypto.randomUUID();
+        const newNodeId = uuidv4();
         const newNodePosition: AbsolutePoint = {
             x: currentNode.meta.position.x + currentNode.meta.width,
             y: currentNode.meta.position.y + currentNode.meta.height,
