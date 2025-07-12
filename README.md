@@ -6,3 +6,7 @@
   npm i
   npm run dev
 ```
+
+# Pending feature list:
+
+- [ ] esc on shortcut modal should close the modal
