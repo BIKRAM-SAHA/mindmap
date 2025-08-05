@@ -28,7 +28,8 @@
       "@assets/*": ["assets/*"],
       "@modules/*": ["modules/*"],
       "@screens/*": ["screens/*"],
-      "@contexts/*": ["contexts/*"]
+      "@contexts/*": ["contexts/*"],
+      "@appTypes/*": ["appTypes/*"],
     }
   },
   "include": ["src"]

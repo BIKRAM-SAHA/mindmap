@@ -12,7 +12,7 @@ import {
 } from "@modules/graphics/common/index.constants";
 import MindMapContext from "@contexts/MindMapContext";
 
-function Canvas({}: Props) {
+function Canvas({ }: Props) {
     const {
         activeNodeId,
         nodes,
@@ -67,32 +67,23 @@ function Canvas({}: Props) {
         e.dataTransfer.dropEffect = "move";
     };
 
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            switch (e.key) {
-                case "Enter":
-                    e.preventDefault();
-                    if (e.shiftKey) handleAddSiblingNode();
-                    else if (e.ctrlKey) handleAddChildNode();
-                    break;
-                case "Delete":
-                    e.preventDefault();
-                    if (e.shiftKey) handleDeleteNode();
-                    break;
-            }
-        };
-        const handleClick = (e: MouseEvent) => {
-            e.preventDefault();
-            changeActiveNodeId(null);
-        };
-        window.addEventListener("keydown", handleKeyDown);
-        window.addEventListener("click", handleClick);
-
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown);
-            window.removeEventListener("click", handleClick);
-        };
-    }, [activeNodeId, nodes]);
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        switch (e.key) {
+            case "Enter":
+                e.preventDefault();
+                if (e.shiftKey) handleAddSiblingNode();
+                else if (e.ctrlKey) handleAddChildNode();
+                break;
+            case "Delete":
+                e.preventDefault();
+                if (e.shiftKey) handleDeleteNode();
+                break;
+        }
+    };
+    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        changeActiveNodeId(null);
+    };
 
     useEffect(() => {
         window.scrollTo(
@@ -106,6 +97,8 @@ function Canvas({}: Props) {
             className={styles.canvasRoot}
             onDrop={onDrop}
             onDragOver={onDragOver}
+            onKeyDown={handleKeyDown}
+            onClick={handleClick}
         >
             <svg
                 style={{
@@ -135,6 +128,10 @@ function Canvas({}: Props) {
                             },
                             height: item.meta.height,
                             width: item.meta.width,
+                            fillColor: item.meta.fillColor,
+                            lineColor: item.meta.lineColor,
+                            lineWidth: item.meta.lineWidth,
+                            textColor: item.meta.textColor,
                         }}
                         key={item.id}
                     />

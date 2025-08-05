@@ -1,0 +1,5 @@
+export enum BUTTON_TYPE {
+    FILL_ICON = "FILL_ICON",
+    TEXT_ICON = "TEXT_ICON",
+    LINE_ICON = "LINE_ICON",
+}

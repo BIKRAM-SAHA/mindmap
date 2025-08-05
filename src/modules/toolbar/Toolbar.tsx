@@ -5,8 +5,11 @@ import MindMapContext from "@contexts/MindMapContext";
 
 type Props = {};
 
-function Toolbar({}: Props) {
-    const { activeNodeId } = useContext(MindMapContext);
+function Toolbar({ }: Props) {
+    const { activeNodeId } = useContext(MindMapContext) ?? {};
+    if (activeNodeId === undefined)
+        throw new Error("MindMapContext not initiated properly");
+
     return (
         <>
             <div className={[styles.topRightMenu, styles.menu].join(" ")}>
@@ -16,13 +19,15 @@ function Toolbar({}: Props) {
                     </div>
                 ))}
             </div>
-            <div className={[styles.topMiddletMenu, styles.menu].join(" ")}>
-                {topMiddleMenuTools.map((item, index) => (
-                    <div key={index} className={styles.menuItem}>
-                        <item.component />
-                    </div>
-                ))}
-            </div>
+            {
+                activeNodeId && <div className={[styles.topMiddleMenu, styles.menu].join(" ")}>
+                    {topMiddleMenuTools.map((item, index) => (
+                        <div key={index} className={styles.menuItem}>
+                            <item.component />
+                        </div>
+                    ))}
+                </div>
+            }
         </>
     );
 }

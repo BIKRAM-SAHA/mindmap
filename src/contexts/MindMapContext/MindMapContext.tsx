@@ -20,6 +20,10 @@ type Node = (RootNode | SimpleNode) & {
         position: AbsolutePoint;
         height: number;
         width: number;
+        fillColor: string;
+        lineColor: string;
+        lineWidth: number;
+        textColor: string;
     };
 };
 
@@ -40,6 +44,10 @@ export type MindMap = {
     removeNode: (nodeId: string) => Response<string>;
     addSibling: () => Response<string>;
     moveNode: (endPosition: AbsolutePoint) => void;
+    onLineColorChange: (colorValue: string) => void;
+    onLineWidthChange: (colorValue: number) => void;
+    onFillColorChange: (colorValue: string) => void;
+    onTextColorChange: (colorValue: string) => void;
 };
 
 const MindMapContext = createContext<MindMap | null>(null);
@@ -54,6 +62,10 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
                 position: { x: centerX, y: centerY },
                 height: DEFAULT_NODE_HEIGHT,
                 width: DEFAULT_NODE_WIDTH,
+                fillColor: "#ffffff",
+                lineColor: "#000000",
+                lineWidth: 2,
+                textColor: "#000000",
             },
             parent: null,
         },
@@ -66,7 +78,6 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
     };
 
     const onTextChange = (value: string, height: number, width: number) => {
-        console.log(height);
         const currentNode: Node | undefined = nodes.find(
             (item) => item.id === activeNodeId
         );
@@ -122,7 +133,7 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
             };
         }
 
-        const newNodeId = self.crypto.randomUUID();
+        const newNodeId = uuidv4();
         const newNodePosition: AbsolutePoint = {
             x: currentNode.meta.position.x + currentNode.meta.width,
             y: currentNode.meta.position.y + currentNode.meta.height,
@@ -137,6 +148,10 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
                     position: newNodePosition,
                     height: DEFAULT_NODE_HEIGHT,
                     width: DEFAULT_NODE_WIDTH,
+                    fillColor: "#ffffff",
+                    lineColor: "#000000",
+                    lineWidth: 2,
+                    textColor: "#000000",
                 },
                 parent: currNodeId,
             },
@@ -262,6 +277,90 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
         );
     };
 
+    const onLineColorChange = (colorValue: string) => {
+        const currentNode: Node | undefined = nodes.find(
+            (item) => item.id === activeNodeId
+        );
+        if (!currentNode)
+            throw new Error("MindMapContext: Invalid active node");
+        setNodes((prevNodes) =>
+            prevNodes.map((item) => {
+                if (item.id === activeNodeId)
+                    return {
+                        ...item,
+                        meta: {
+                            ...item.meta,
+                            lineColor: colorValue,
+                        },
+                    };
+                return item;
+            })
+        );
+    };
+
+    const onLineWidthChange = (value: number) => {
+        const currentNode: Node | undefined = nodes.find(
+            (item) => item.id === activeNodeId
+        );
+        if (!currentNode)
+            throw new Error("MindMapContext: Invalid active node");
+        setNodes((prevNodes) =>
+            prevNodes.map((item) => {
+                if (item.id === activeNodeId)
+                    return {
+                        ...item,
+                        meta: {
+                            ...item.meta,
+                            lineWidth: value,
+                        },
+                    };
+                return item;
+            })
+        );
+    };
+
+    const onFillColorChange = (colorValue: string) => {
+        const currentNode: Node | undefined = nodes.find(
+            (item) => item.id === activeNodeId
+        );
+        if (!currentNode)
+            throw new Error("MindMapContext: Invalid active node");
+        setNodes((prevNodes) =>
+            prevNodes.map((item) => {
+                if (item.id === activeNodeId)
+                    return {
+                        ...item,
+                        meta: {
+                            ...item.meta,
+                            fillColor: colorValue,
+                        },
+                    };
+                return item;
+            })
+        );
+    };
+
+    const onTextColorChange = (colorValue: string) => {
+        const currentNode: Node | undefined = nodes.find(
+            (item) => item.id === activeNodeId
+        );
+        if (!currentNode)
+            throw new Error("MindMapContext: Invalid active node");
+        setNodes((prevNodes) =>
+            prevNodes.map((item) => {
+                if (item.id === activeNodeId)
+                    return {
+                        ...item,
+                        meta: {
+                            ...item.meta,
+                            textColor: colorValue,
+                        },
+                    };
+                return item;
+            })
+        );
+    };
+
     const contextValues = useMemo(
         () => ({
             nodes,
@@ -273,6 +372,10 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
             addSibling,
             removeNode,
             moveNode,
+            onLineColorChange,
+            onLineWidthChange,
+            onFillColorChange,
+            onTextColorChange,
         }),
         [
             nodes,
@@ -284,6 +387,10 @@ export const MindMapProvider = ({ children }: PropsWithChildren) => {
             addSibling,
             removeNode,
             moveNode,
+            onLineColorChange,
+            onLineWidthChange,
+            onFillColorChange,
+            onTextColorChange,
         ]
     );
 

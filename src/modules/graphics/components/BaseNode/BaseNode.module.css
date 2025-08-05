@@ -2,21 +2,17 @@
     transform-origin: center;
     cursor: pointer;
     border: 2px solid black;
+
     &[data-isactive="true"] {
         border: 5px solid green;
     }
 }
-.rootNode {
-    background-color: blue;
-    caret-color: blue;
-}
-.node {
-    background-color: yellow;
-}
+
 .textArea {
     resize: none;
     overflow: hidden;
     white-space: pre;
     outline: none;
     border: none;
+    background-color: transparent;
 }
