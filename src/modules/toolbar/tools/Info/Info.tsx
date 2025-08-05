@@ -14,7 +14,7 @@ function Info({}: Props) {
                 className={styles.infoContainer}
                 onClick={() => setShowModal(true)}
             >
-                ?
+                ⌨️ 
             </div>
             {showModal &&
                 createPortal(
