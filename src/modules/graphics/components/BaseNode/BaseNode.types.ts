@@ -8,5 +8,9 @@ export type BaseNodeElemProps = {
         position: AbsolutePoint;
         height: number;
         width: number;
+        fillColor: string;
+        lineColor: string;
+        lineWidth: number;
+        textColor: string;
     };
 };

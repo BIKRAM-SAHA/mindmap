@@ -1,0 +1,37 @@
+.container {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.portalContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
+}
+
+.icon {
+    display: flex;
+    width: 1rem;
+    height: 1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.fillIcon {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjRweCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiIHdpZHRoPSIyNHB4IiBmaWxsPSIjMDAwMDAwIj48cGF0aCBkPSJtMjQ3LTkwNCA1Ny01NiAzNDMgMzQzcTIzIDIzIDIzIDU3dC0yMyA1N0w0NTctMzEzcS0yMyAyMy01NyAyM3QtNTctMjNMMTUzLTUwM3EtMjMtMjMtMjMtNTd0MjMtNTdsMTkwLTE5MS05Ni05NlptMTUzIDE1M0wyMDktNTYwaDM4Mkw0MDAtNzUxWm0zNjAgNDcxcS0zMyAwLTU2LjUtMjMuNVQ2ODAtMzYwcTAtMjEgMTIuNS00NXQyNy41LTQ1cTktMTIgMTktMjV0MjEtMjVxMTEgMTIgMjEgMjV0MTkgMjVxMTUgMjEgMjcuNSA0NXQxMi41IDQ1cTAgMzMtMjMuNSA1Ni41VDc2MC0yODBaTTgwIDB2LTE2MGg4MDBWMEg4MFoiLz48L3N2Zz4=");
+}
+
+.lineColorIcon {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjRweCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiIHdpZHRoPSIyNHB4IiBmaWxsPSIjMDAwMDAwIj48cGF0aCBkPSJNODAgMHYtMTYwaDgwMFYwSDgwWm0xNjAtMzIwaDU2bDMxMi0zMTEtMjktMjktMjgtMjgtMzExIDMxMnY1NlptLTgwIDgwdi0xNzBsNDQ4LTQ0N3ExMS0xMSAyNS41LTE3dDMwLjUtNnExNiAwIDMxIDZ0MjcgMThsNTUgNTZxMTIgMTEgMTcuNSAyNnQ1LjUgMzFxMCAxNS01LjUgMjkuNVQ3NzctNjg3TDMzMC0yNDBIMTYwWm01NjAtNTA0LTU2LTU2IDU2IDU2Wk02MDgtNjMxbC0yOS0yOS0yOC0yOCA1NyA1N1oiLz48L3N2Zz4=");
+}
+
+.textColorIcon {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGxpbmUgeTE9IjIyLjUiIHgyPSIyNCIgeTI9IjIyLjUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMyIvPgo8cGF0aCBkPSJNNy4xMDI0NyAxOUgzLjYwODc1TDkuOTY5NzggMC45MzE1MDhIMTQuMDEwNUwyMC4zODAzIDE5SDE2Ljg4NjZMMTIuMDYwNyA0LjYzNjk2SDExLjkxOTZMNy4xMDI0NyAxOVpNNy4yMTcxNiAxMS45MTU1SDE2Ljc0NTVWMTQuNTQ0Nkg3LjIxNzE2VjExLjkxNTVaIiBmaWxsPSJibGFjayIvPgo8L3N2Zz4K");
+}

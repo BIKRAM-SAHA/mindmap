@@ -73,6 +73,9 @@ function BaseNode({ type, NodeData }: Props) {
             style={{
                 position: "absolute",
                 transform: `translate(${xpos}px, ${ypos}px) translate(-50%,-50%)`,
+                backgroundColor: NodeData.fillColor,
+                borderColor: NodeData.lineColor,
+                borderWidth: NodeData.lineWidth,
             }}
         >
             <textarea
@@ -99,6 +102,7 @@ function BaseNode({ type, NodeData }: Props) {
                 className={styles.textArea}
                 rows={1}
                 cols={1}
+                style={{ color: NodeData.textColor }}
             />
         </div>
     );
