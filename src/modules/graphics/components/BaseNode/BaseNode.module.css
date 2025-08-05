@@ -4,7 +4,7 @@
     border: 2px solid black;
 
     &[data-isactive="true"] {
-        border: 5px solid green;
+        border: 5px solid green !important;
     }
 }
 
