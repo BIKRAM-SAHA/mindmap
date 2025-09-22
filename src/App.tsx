@@ -1,24 +1,22 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "@modules/common";
 import NotifyContainer from "@modules/notifications";
-import { MindMapProvider } from "@contexts/MindMapContext";
 import "./App.css";
 import { Home } from "./screens";
-import { NodeStyleBarContextProvider } from "@contexts/NodeStyleBarContext";
+import { Provider } from "react-redux";
+import store from "./app/store";
 
 function App() {
-    return (
-        <>
-            <ErrorBoundary fallback={<ErrorFallback />}>
-                <NotifyContainer />
-                <MindMapProvider>
-                    <NodeStyleBarContextProvider>
-                        <Home />
-                    </NodeStyleBarContextProvider>
-                </MindMapProvider>
-            </ErrorBoundary>
-        </>
-    );
+	return (
+		<>
+			<ErrorBoundary fallback={<ErrorFallback />}>
+				<NotifyContainer />
+				<Provider store={store}>
+					<Home />
+				</Provider>
+			</ErrorBoundary>
+		</>
+	);
 }
 
 export default App;

@@ -30,6 +30,7 @@
       "@screens/*": ["screens/*"],
       "@contexts/*": ["contexts/*"],
       "@appTypes/*": ["appTypes/*"],
+      "@app/*": ["app/*"]
     }
   },
   "include": ["src"]

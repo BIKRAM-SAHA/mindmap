@@ -39,6 +39,10 @@ const config = defineConfig({
                 find: "@appTypes",
                 replacement: path.resolve(__dirname, "src/appTypes"),
             },
+            {
+                find: "@app",
+                replacement: path.resolve(__dirname, "src/app"),
+            },
         ],
     },
 });
