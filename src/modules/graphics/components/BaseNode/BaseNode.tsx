@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { BaseNodeElemProps as Props } from "./BaseNode.types";
 import styles from "./BaseNode.module.css";
 import { useAppDispatch, useAppSelector } from "@app/hooks";
