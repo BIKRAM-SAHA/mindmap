@@ -14,6 +14,7 @@ import {
 	addChild,
 	addSibling,
 	changeActiveNode,
+	changeMode,
 	goToChild,
 	goToNextSibling,
 	goToParent,
@@ -84,36 +85,34 @@ function Canvas({}: Props) {
 		const handleKeyDown = (e: KeyboardEvent) => {
 			switch (e.key) {
 				case "Escape":
+					if (mode.type === "insert") {
+						dispatch(changeMode({ type: "normal" }));
+					}
 					break;
 				case "Enter":
 					if (e.shiftKey) handleAddSiblingNode();
 					else if (e.ctrlKey) handleAddChildNode();
 					break;
 				case "Delete":
-					e.preventDefault();
 					if (e.shiftKey) handleDeleteNode();
 					break;
 				case "j":
 					if (mode.type === "normal") {
-						e.preventDefault();
 						handleGoToChildNode();
 					}
 					break;
 				case "k":
 					if (mode.type === "normal") {
-						e.preventDefault();
 						handleGoToParentNode();
 					}
 					break;
 				case "l":
 					if (mode.type === "normal") {
-						e.preventDefault();
 						handleGoToNextSiblingNode();
 					}
 					break;
 				case "h":
 					if (mode.type === "normal") {
-						e.preventDefault();
 						handleGoToPrevSiblingNode();
 						break;
 					}
