@@ -159,9 +159,17 @@ const mindMapSlice = createSlice({
 				notifyError("Cannot go to sibling of Root");
 				return;
 			}
-			const siblingNodeIdx =
-				(activeNodeIdx + 1) %
+			const activeNodePositionInAdjList =
+				state.childAdjacencyList[parentNodeIdx].findIndex(
+					(item) => item === activeNodeIdx
+				) || 0;
+			const nextNodePositionInAdjList =
+				(activeNodePositionInAdjList + 1) %
 				state.childAdjacencyList[parentNodeIdx].length;
+			const siblingNodeIdx =
+				state.childAdjacencyList[parentNodeIdx][
+					nextNodePositionInAdjList
+				];
 			state.activeNodeIdx = siblingNodeIdx;
 		},
 		goToPrevSibling: (state) => {
@@ -176,9 +184,17 @@ const mindMapSlice = createSlice({
 				notifyError("Cannot go to sibling of Root");
 				return;
 			}
-			const siblingNodeIdx =
-				(activeNodeIdx + 1) %
+			const activeNodePositionInAdjList =
+				state.childAdjacencyList[parentNodeIdx].findIndex(
+					(item) => item === activeNodeIdx
+				) || 0;
+			const prevNodePositionInAdjList =
+				(activeNodePositionInAdjList + state.childAdjacencyList[parentNodeIdx].length - 1) %
 				state.childAdjacencyList[parentNodeIdx].length;
+			const siblingNodeIdx =
+				state.childAdjacencyList[parentNodeIdx][
+					prevNodePositionInAdjList
+				];
 			state.activeNodeIdx = siblingNodeIdx;
 		},
 		goToParent: (state) => {
