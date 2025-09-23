@@ -9,8 +9,9 @@
 
 # Pending feature list:
 
-- [ ] esc on shortcut modal should close the modal
 - [ ] tidy the rendering of nodes
+- [ ] download the mindmap as png
+- [ ] share the mindmap
 
 
 # References:
