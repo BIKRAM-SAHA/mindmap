@@ -88,6 +88,8 @@ const mindMapSlice = createSlice({
 			state.childAdjacencyList.push([]);
 			state.childAdjacencyList[parentNodeIdx].push(newNodeIdx);
 			state.activeNodeIdx = newNodeIdx;
+			if (state.mode.type === "insert")
+				state.mode.nodeIdxBeingEdited = newNodeIdx;
 		},
 		removeNode: (state) => {
 			const nodeIdx = state.activeNodeIdx;

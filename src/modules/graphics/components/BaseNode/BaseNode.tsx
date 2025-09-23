@@ -72,9 +72,9 @@ function BaseNode({ NodeData }: Props) {
 			onDoubleClick={() => {
 				changeContentEditState(true);
 			}}
-			onBlur={() => {
-				changeContentEditState(false);
-			}}
+			// onBlur={() => {
+			// 	changeContentEditState(false);
+			// }}
 			style={{
 				position: "absolute",
 				transform: `translate(${xpos}px, ${ypos}px) translate(-50%,-50%)`,
