@@ -31,7 +31,7 @@ export const commands = [
     },
     {
         title: "Traverse through sibling nodes",
-        keys: ["click", "l | k"],
-        subTitle: "Select a node then `l` or `k` to traverse through sibling nodes",
+        keys: ["click", "l | h"],
+        subTitle: "Select a node then `l` or `h` to traverse through sibling nodes",
     }
 ];

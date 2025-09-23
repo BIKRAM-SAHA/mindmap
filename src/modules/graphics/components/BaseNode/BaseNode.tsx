@@ -4,27 +4,40 @@ import styles from "./BaseNode.module.css";
 import { useAppDispatch, useAppSelector } from "@app/hooks";
 import {
 	changeActiveNode,
+	changeMode,
 	onTextChange,
 	removeNode,
 	selectMindMapActiveNodeIdx,
+	selectMode,
 } from "@app/slices/MindMapSlice";
 
 function BaseNode({ NodeData }: Props) {
 	const mindmapActivenodeIdx = useAppSelector(selectMindMapActiveNodeIdx);
+	const mode = useAppSelector(selectMode);
 	const dispatch = useAppDispatch();
 
+	const editEnabled =
+		mode.type === "insert" && mode.nodeIdxBeingEdited === NodeData.id;
+
 	const contentElemRef = useRef<HTMLTextAreaElement | null>(null);
-	const [editEnabled, setEditEnabled] = useState(
-		mindmapActivenodeIdx === NodeData.id
-	);
+
 	const changeContentEditState = (value: boolean) => {
-		setEditEnabled(value);
+		if (value)
+			dispatch(
+				changeMode({
+					type: "insert",
+					nodeIdxBeingEdited: NodeData.id,
+				})
+			);
+		else
+			dispatch(
+				changeMode({
+					type: "normal",
+				})
+			);
 	};
 	const removeNodeIfEmpty = () => {
-		if (
-			!NodeData.text.length &&
-			mindmapActivenodeIdx !== NodeData.id
-		) {
+		if (!NodeData.text.length && mindmapActivenodeIdx !== NodeData.id) {
 			dispatch(removeNode());
 		}
 	};

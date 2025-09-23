@@ -19,6 +19,7 @@ type Node = {
 
 type mindmapSlice = {
 	activeNodeIdx: null | number;
+	mode: Mode;
 	nodes: Node[];
 	childAdjacencyList: number[][];
 };
@@ -29,8 +30,20 @@ type Connector = {
 	toPosition: AbsolutePoint;
 };
 
+type NORMAL_MODE = {
+	type: "normal";
+};
+
+type INSERT_MODE = {
+	type: "insert";
+	nodeIdxBeingEdited: number;
+};
+
+type Mode = NORMAL_MODE | INSERT_MODE;
+
 const initialState: mindmapSlice = {
 	activeNodeIdx: 0,
+	mode: { type: "normal" },
 	nodes: [
 		{
 			idx: 0,
@@ -82,6 +95,10 @@ const mindMapSlice = createSlice({
 				notifyError("No Node Selected");
 				return;
 			}
+			if (nodeIdx === 0) {
+				notifyError("Cannot delete Root");
+				return;
+			}
 
 			state.nodes.splice(nodeIdx, 1);
 			state.childAdjacencyList.splice(nodeIdx, 1);
@@ -128,9 +145,26 @@ const mindMapSlice = createSlice({
 
 			state.activeNodeIdx = action.payload;
 		},
-		goToSibling: (state) => {
+		goToNextSibling: (state) => {
 			const activeNodeIdx = state.activeNodeIdx;
-			if (activeNodeIdx===null) {
+			if (activeNodeIdx === null) {
+				notifyError("No Node Selected");
+				return;
+			}
+
+			const parentNodeIdx = state.nodes[activeNodeIdx].parentIdx;
+			if (parentNodeIdx === null) {
+				notifyError("Cannot go to sibling of Root");
+				return;
+			}
+			const siblingNodeIdx =
+				(activeNodeIdx + 1) %
+				state.childAdjacencyList[parentNodeIdx].length;
+			state.activeNodeIdx = siblingNodeIdx;
+		},
+		goToPrevSibling: (state) => {
+			const activeNodeIdx = state.activeNodeIdx;
+			if (activeNodeIdx === null) {
 				notifyError("No Node Selected");
 				return;
 			}
@@ -147,7 +181,7 @@ const mindMapSlice = createSlice({
 		},
 		goToParent: (state) => {
 			const activeNodeIdx = state.activeNodeIdx;
-			if (activeNodeIdx===null) {
+			if (activeNodeIdx === null) {
 				notifyError("No Node Selected");
 				return;
 			}
@@ -159,9 +193,24 @@ const mindMapSlice = createSlice({
 			}
 			state.activeNodeIdx = parentNodeIdx;
 		},
+		goToChild: (state) => {
+			const activeNodeIdx = state.activeNodeIdx;
+			if (activeNodeIdx === null) {
+				notifyError("No Node Selected");
+				return;
+			}
+
+			const childNodeIdx =
+				state.childAdjacencyList[activeNodeIdx][0] ?? null;
+			if (childNodeIdx === null) {
+				notifyError("Cannot go to child of Leaf");
+				return;
+			}
+			state.activeNodeIdx = childNodeIdx;
+		},
 		onTextChange: (state, action: PayloadAction<string>) => {
 			const activeNodeIdx = state.activeNodeIdx;
-			if (activeNodeIdx===null) {
+			if (activeNodeIdx === null) {
 				notifyError("No Node Selected");
 				return;
 			}
@@ -170,7 +219,7 @@ const mindMapSlice = createSlice({
 		},
 		onMoveNode: (state, action: PayloadAction<AbsolutePoint>) => {
 			const activeNodeIdx = state.activeNodeIdx;
-			if (activeNodeIdx===null) {
+			if (activeNodeIdx === null) {
 				notifyError("No Node Selected");
 				return;
 			}
@@ -179,7 +228,7 @@ const mindMapSlice = createSlice({
 		},
 		onLineColorChange: (state, action: PayloadAction<string>) => {
 			const activeNodeIdx = state.activeNodeIdx;
-			if (activeNodeIdx===null) {
+			if (activeNodeIdx === null) {
 				notifyError("No Node Selected");
 				return;
 			}
@@ -188,7 +237,7 @@ const mindMapSlice = createSlice({
 		},
 		onLineWidthChange: (state, action: PayloadAction<number>) => {
 			const activeNodeIdx = state.activeNodeIdx;
-			if (activeNodeIdx===null) {
+			if (activeNodeIdx === null) {
 				notifyError("No Node Selected");
 				return;
 			}
@@ -197,7 +246,7 @@ const mindMapSlice = createSlice({
 		},
 		onFillColorChange: (state, action: PayloadAction<string>) => {
 			const activeNodeIdx = state.activeNodeIdx;
-			if (activeNodeIdx===null) {
+			if (activeNodeIdx === null) {
 				notifyError("No Node Selected");
 				return;
 			}
@@ -206,12 +255,15 @@ const mindMapSlice = createSlice({
 		},
 		onTextColorChange: (state, action: PayloadAction<string>) => {
 			const activeNodeIdx = state.activeNodeIdx;
-			if (activeNodeIdx===null) {
+			if (activeNodeIdx === null) {
 				notifyError("No Node Selected");
 				return;
 			}
 
 			state.nodes[activeNodeIdx].meta.textColor = action.payload;
+		},
+		changeMode: (state, action: PayloadAction<Mode>) => {
+			state.mode = action.payload;
 		},
 	},
 });
@@ -221,7 +273,9 @@ export const {
 	addSibling,
 	changeActiveNode,
 	goToParent,
-	goToSibling,
+	goToChild,
+	goToNextSibling,
+	goToPrevSibling,
 	onFillColorChange,
 	onLineColorChange,
 	onLineWidthChange,
@@ -229,6 +283,7 @@ export const {
 	onTextChange,
 	onTextColorChange,
 	removeNode,
+	changeMode,
 } = mindMapSlice.actions;
 export const selectMindMap = (state: RootState) => state.mindmap;
 export const selectMindMapNodes = (state: RootState) => state.mindmap.nodes;
@@ -268,4 +323,5 @@ export const selectMindMapConnectors = createSelector(
 		return connectors;
 	}
 );
+export const selectMode = (state: RootState) => state.mindmap.mode;
 export const mindmapReducer = mindMapSlice.reducer;

@@ -14,16 +14,22 @@ import {
 	addChild,
 	addSibling,
 	changeActiveNode,
+	goToChild,
+	goToNextSibling,
+	goToParent,
+	goToPrevSibling,
 	onMoveNode,
 	removeNode,
 	selectMindMapConnectors,
 	selectMindMapNodes,
+	selectMode,
 } from "@app/slices/MindMapSlice";
 
 function Canvas({}: Props) {
 	const dispatch = useAppDispatch();
 	const mindmapNodes = useAppSelector(selectMindMapNodes);
 	const mindmapConnectors = useAppSelector(selectMindMapConnectors);
+	const mode = useAppSelector(selectMode);
 
 	const handleAddChildNode = () => {
 		dispatch(addChild());
@@ -34,6 +40,18 @@ function Canvas({}: Props) {
 	};
 	const handleDeleteNode = () => {
 		dispatch(removeNode());
+	};
+	const handleGoToChildNode = () => {
+		dispatch(goToChild());
+	};
+	const handleGoToParentNode = () => {
+		dispatch(goToParent());
+	};
+	const handleGoToNextSiblingNode = () => {
+		dispatch(goToNextSibling());
+	};
+	const handleGoToPrevSiblingNode = () => {
+		dispatch(goToPrevSibling());
 	};
 	const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
 		e.preventDefault();
@@ -55,8 +73,18 @@ function Canvas({}: Props) {
 	};
 
 	useEffect(() => {
+		//handle scrollToCenter onLoad
+		window.scrollTo(
+			centerX - window.innerWidth / 2,
+			centerY - window.innerHeight / 2
+		);
+	}, []);
+	useEffect(() => {
+		//handle keybindings for mindmap
 		const handleKeyDown = (e: KeyboardEvent) => {
 			switch (e.key) {
+				case "Escape":
+					break;
 				case "Enter":
 					if (e.shiftKey) handleAddSiblingNode();
 					else if (e.ctrlKey) handleAddChildNode();
@@ -65,15 +93,35 @@ function Canvas({}: Props) {
 					e.preventDefault();
 					if (e.shiftKey) handleDeleteNode();
 					break;
+				case "j":
+					if (mode.type === "normal") {
+						e.preventDefault();
+						handleGoToChildNode();
+					}
+					break;
+				case "k":
+					if (mode.type === "normal") {
+						e.preventDefault();
+						handleGoToParentNode();
+					}
+					break;
+				case "l":
+					if (mode.type === "normal") {
+						e.preventDefault();
+						handleGoToNextSiblingNode();
+					}
+					break;
+				case "h":
+					if (mode.type === "normal") {
+						e.preventDefault();
+						handleGoToPrevSiblingNode();
+						break;
+					}
 			}
 		};
 		window.addEventListener("keydown", handleKeyDown);
-		window.scrollTo(
-			centerX - window.innerWidth / 2,
-			centerY - window.innerHeight / 2
-		);
 		return () => window.removeEventListener("keydown", handleKeyDown);
-	}, []);
+	}, [mode]);
 
 	return (
 		<div
