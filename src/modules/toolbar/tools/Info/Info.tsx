@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import InfoModal from "./components/Modal/InfoModal";
 import styles from "./Info.module.css";
@@ -7,6 +7,18 @@ type Props = {};
 
 function Info({}: Props) {
     const [showModal, setShowModal] = useState(false);
+
+	useEffect(() => {
+		const handleEsc = (e: KeyboardEvent) => {
+			if (showModal && e.key === "Escape") {
+				e.preventDefault();
+				setShowModal(false);
+			}
+		};
+		window.addEventListener("keydown", handleEsc);
+		return () => window.removeEventListener("keydown", handleEsc);
+	}, [showModal]);
+
 
     return (
         <>
