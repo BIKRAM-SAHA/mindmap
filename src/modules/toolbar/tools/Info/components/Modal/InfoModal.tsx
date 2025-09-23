@@ -8,21 +8,22 @@ function InfoModal({ onClose }: Props) {
         <div className={style.modalWrapper}>
             <div className={style.modalContainer}>
                 <div className={style.commands}>
-                    {commands.map((command) => (
+                    {commands.map((command, index) => (
                         <span
                             className={[
                                 style.tooltip,
                                 style.commandContainer,
                             ].join(" ")}
                             data-tooltip={command.subTitle}
+                            key={index}
                         >
                             <div className={style.commandKeys}>
                                 {command.keys.map((key, index) => (
-                                    <>
+                                    <span key={index}>
                                         <CommandBtn text={key} />
                                         {index !== command.keys.length - 1 &&
                                             "+"}
-                                    </>
+                                    </span>
                                 ))}
                                 :
                             </div>
