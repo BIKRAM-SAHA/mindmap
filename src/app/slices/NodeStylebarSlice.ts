@@ -1,6 +1,11 @@
 import { RootState } from "@app/store";
-import { BUTTON_TYPE } from "@appTypes/NodeStyle.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+export enum BUTTON_TYPE {
+	FILL_ICON = "FILL_ICON",
+	TEXT_ICON = "TEXT_ICON",
+	LINE_ICON = "LINE_ICON",
+}
 
 type NodeStylebarSlice = {
 	selectedButton: BUTTON_TYPE | null;

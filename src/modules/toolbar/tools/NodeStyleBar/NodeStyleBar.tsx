@@ -1,12 +1,12 @@
 import { MouseEvent } from "react";
 import { createPortal } from "react-dom";
-import { BUTTON_TYPE } from "@appTypes/NodeStyle.types";
 import styles from "./NodeStyle.module.css";
 import FillStyleModal from "./components/FillStyleModal/FillStyleModal";
 import BorderStyleModal from "./components/BorderStyleModal/BorderStyleModal";
 import TextStyleModal from "./components/TextStyleModal/TextStyleModal";
 import { useAppDispatch, useAppSelector } from "@app/hooks";
 import {
+	BUTTON_TYPE,
 	changeSelectedButton,
 	selectNodeStylebar,
 } from "@app/slices/NodeStylebarSlice";

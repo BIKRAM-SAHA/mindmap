@@ -78,8 +78,6 @@ function BaseNode({ NodeData }: Props) {
 				ref={contentElemRef}
 				readOnly={!editEnabled}
 				className={styles.textArea}
-				rows={1}
-				cols={1}
 				style={{ color: NodeData.textColor }}
 			/>
 		</div>

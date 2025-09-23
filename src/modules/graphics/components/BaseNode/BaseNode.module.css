@@ -2,6 +2,8 @@
     transform-origin: center;
     cursor: pointer;
     border: 2px solid black;
+    min-width: 64px;
+    width: fit-content;
 
     &[data-isactive="true"] {
         border: 5px solid green !important;
@@ -15,4 +17,6 @@
     outline: none;
     border: none;
     background-color: transparent;
+    field-sizing: content;
+    text-align: center;
 }

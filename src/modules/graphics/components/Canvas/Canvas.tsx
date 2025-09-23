@@ -49,29 +49,30 @@ function Canvas({}: Props) {
 		e.dataTransfer.dropEffect = "move";
 	};
 
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-		switch (e.key) {
-			case "Enter":
-				e.preventDefault();
-				if (e.shiftKey) handleAddSiblingNode();
-				else if (e.ctrlKey) handleAddChildNode();
-				break;
-			case "Delete":
-				e.preventDefault();
-				if (e.shiftKey) handleDeleteNode();
-				break;
-		}
-	};
 	const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
 		e.preventDefault();
 		dispatch(changeActiveNode(null));
 	};
 
 	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			switch (e.key) {
+				case "Enter":
+					if (e.shiftKey) handleAddSiblingNode();
+					else if (e.ctrlKey) handleAddChildNode();
+					break;
+				case "Delete":
+					e.preventDefault();
+					if (e.shiftKey) handleDeleteNode();
+					break;
+			}
+		};
+		window.addEventListener("keydown", handleKeyDown);
 		window.scrollTo(
 			centerX - window.innerWidth / 2,
 			centerY - window.innerHeight / 2
 		);
+		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, []);
 
 	return (
@@ -79,7 +80,6 @@ function Canvas({}: Props) {
 			className={styles.canvasRoot}
 			onDrop={onDrop}
 			onDragOver={onDragOver}
-			onKeyDown={handleKeyDown}
 			onClick={handleClick}
 		>
 			<svg
