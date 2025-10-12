@@ -12,6 +12,7 @@
 - [ ] tidy the rendering of nodes
 - [ ] download the mindmap as png
 - [ ] share the mindmap
+- [ ] UI/UX support for mobile screens
 
 
 # References:
