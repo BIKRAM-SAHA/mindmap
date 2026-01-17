@@ -5,7 +5,7 @@
     min-width: 64px;
     width: fit-content;
 
-    &[data-isactive="true"] {
+    &[data-isactive='true'] {
         border: 5px solid green !important;
     }
 }

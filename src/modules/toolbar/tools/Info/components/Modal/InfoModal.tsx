@@ -1,7 +1,7 @@
-import CommandBtn from "../CommandBtn/CommandBtn";
-import { commands } from "./InfoModal.constants";
-import style from "./InfoModal.module.css";
-import { InfoModalProps as Props } from "./InfoModal.types";
+import CommandBtn from '../CommandBtn/CommandBtn'
+import { commands } from './InfoModal.constants'
+import style from './InfoModal.module.css'
+import { InfoModalProps as Props } from './InfoModal.types'
 
 function InfoModal({ onClose }: Props) {
     return (
@@ -13,7 +13,7 @@ function InfoModal({ onClose }: Props) {
                             className={[
                                 style.tooltip,
                                 style.commandContainer,
-                            ].join(" ")}
+                            ].join(' ')}
                             data-tooltip={command.subTitle}
                             key={index}
                         >
@@ -22,7 +22,7 @@ function InfoModal({ onClose }: Props) {
                                     <span key={index}>
                                         <CommandBtn text={key} />
                                         {index !== command.keys.length - 1 &&
-                                            "+"}
+                                            '+'}
                                     </span>
                                 ))}
                                 :
@@ -34,7 +34,7 @@ function InfoModal({ onClose }: Props) {
                 <button onClick={onClose}>Close</button>
             </div>
         </div>
-    );
+    )
 }
 
-export default InfoModal;
+export default InfoModal

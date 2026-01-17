@@ -1,1 +1,1 @@
-export { default as Canvas } from "./components/Canvas/Canvas";
+export { default as Canvas } from './components/Canvas/Canvas'

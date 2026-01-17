@@ -14,9 +14,9 @@
 - [ ] share the mindmap
 - [ ] UI/UX support for mobile screens
 
-
 # References:
+
 - Tidy Drawing:
-  - https://reingold.co/tidier-drawings.pdf: making the drawing look tidier
-  - https://observablehq.com/@d3/tree/2
-  - https://observablehq.com/@d3/radial-tree/2
+    - https://reingold.co/tidier-drawings.pdf: making the drawing look tidier
+    - https://observablehq.com/@d3/tree/2
+    - https://observablehq.com/@d3/radial-tree/2

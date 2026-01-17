@@ -1,13 +1,13 @@
-import { PathProps as Props } from "./Path.types";
+import { PathProps as Props } from './Path.types'
 
 function Path({ from, to }: Props) {
-    const fromx = from.x;
-    const fromy = from.y;
-    const tox = to.x;
-    const toy = to.y;
+    const fromx = from.x
+    const fromy = from.y
+    const tox = to.x
+    const toy = to.y
 
-    const controlx = fromx;
-    const controly = toy;
+    const controlx = fromx
+    const controly = toy
 
     return (
         <path
@@ -17,7 +17,7 @@ function Path({ from, to }: Props) {
             strokeLinecap="round"
             strokeLinejoin="round"
         />
-    );
+    )
 }
 
-export default Path;
+export default Path

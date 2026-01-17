@@ -1,11 +1,11 @@
-import styles from "./CommandBtn.module.css";
+import styles from './CommandBtn.module.css'
 
 type Props = {
-    text: string;
-};
-
-function CommandBtn({ text }: Props) {
-    return <button className={styles.commandBtn}>{text}</button>;
+    text: string
 }
 
-export default CommandBtn;
+function CommandBtn({ text }: Props) {
+    return <button className={styles.commandBtn}>{text}</button>
+}
+
+export default CommandBtn

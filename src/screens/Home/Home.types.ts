@@ -1,1 +1,1 @@
-export type HomeScreenProps = {};
+export type HomeScreenProps = {}

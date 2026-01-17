@@ -4,4 +4,4 @@ export {
     notifyWarn,
     notifyError,
     notifySucess,
-} from "./Notify";
+} from './Notify'

@@ -1,6 +1,6 @@
-import { Canvas } from "@modules/graphics";
-import { HomeScreenProps as Props } from "./Home.types";
-import Toolbar from "@modules/toolbar";
+import { Canvas } from '@modules/graphics'
+import { HomeScreenProps as Props } from './Home.types'
+import Toolbar from '@modules/toolbar'
 
 function Home({}: Props) {
     return (
@@ -8,7 +8,7 @@ function Home({}: Props) {
             <Canvas />
             <Toolbar />
         </>
-    );
+    )
 }
 
-export default Home;
+export default Home

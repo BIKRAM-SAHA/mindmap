@@ -1,3 +1,3 @@
 export type InfoModalProps = {
-    onClose: () => void;
-};
+    onClose: () => void
+}

@@ -1,11 +1,11 @@
-import { defineConfig as testConfig } from "vitest/config";
-import { defineConfig } from "vite";
-import path from "node:path";
-import react from "@vitejs/plugin-react-swc";
+import { defineConfig as testConfig } from 'vitest/config'
+import { defineConfig } from 'vite'
+import path from 'node:path'
+import react from '@vitejs/plugin-react-swc'
 
 // https://vite.dev/config/
 const config = defineConfig({
-    base: "/",
+    base: '/',
     plugins: [react()],
     preview: {
         port: 8080,
@@ -15,42 +15,42 @@ const config = defineConfig({
         port: 8080,
         strictPort: true,
         host: true,
-        origin: "http://0.0.0.0:8080",
+        origin: 'http://0.0.0.0:8080',
     },
     resolve: {
         alias: [
             {
-                find: "@assets",
-                replacement: path.resolve(__dirname, "src/assets"),
+                find: '@assets',
+                replacement: path.resolve(__dirname, 'src/assets'),
             },
             {
-                find: "@modules",
-                replacement: path.resolve(__dirname, "src/modules"),
+                find: '@modules',
+                replacement: path.resolve(__dirname, 'src/modules'),
             },
             {
-                find: "@screens",
-                replacement: path.resolve(__dirname, "src/screens"),
+                find: '@screens',
+                replacement: path.resolve(__dirname, 'src/screens'),
             },
             {
-                find: "@contexts",
-                replacement: path.resolve(__dirname, "src/contexts"),
+                find: '@contexts',
+                replacement: path.resolve(__dirname, 'src/contexts'),
             },
             {
-                find: "@appTypes",
-                replacement: path.resolve(__dirname, "src/appTypes"),
+                find: '@appTypes',
+                replacement: path.resolve(__dirname, 'src/appTypes'),
             },
             {
-                find: "@app",
-                replacement: path.resolve(__dirname, "src/app"),
+                find: '@app',
+                replacement: path.resolve(__dirname, 'src/app'),
             },
         ],
     },
-});
+})
 
 const tstConfig = testConfig({
     test: {
-        environment: "jsdom",
+        environment: 'jsdom',
     },
-});
+})
 
-export default { ...config, ...tstConfig };
+export default { ...config, ...tstConfig }

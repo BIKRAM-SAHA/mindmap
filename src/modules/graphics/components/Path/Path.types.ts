@@ -1,6 +1,6 @@
-import { AbsolutePoint } from "../../common/index.types";
+import { AbsolutePoint } from '../../common/index.types'
 
 export type PathProps = {
-    from: AbsolutePoint;
-    to: AbsolutePoint;
-};
+    from: AbsolutePoint
+    to: AbsolutePoint
+}
