@@ -8,9 +8,7 @@ import {
 } from '@app/slices/MindMapSlice'
 import { changeSelectedButton } from '@app/slices/NodeStylebarSlice'
 
-type Props = {}
-
-function TextStyleModal({}: Props) {
+function TextStyleModal() {
     const activeNode = useAppSelector(selectMindMapActiveNode)
     const dispatch = useAppDispatch()
 

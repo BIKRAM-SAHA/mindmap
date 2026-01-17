@@ -1,8 +1,7 @@
 import { Canvas } from '@modules/graphics'
-import { HomeScreenProps as Props } from './Home.types'
 import Toolbar from '@modules/toolbar'
 
-function Home({}: Props) {
+function Home() {
     return (
         <>
             <Canvas />

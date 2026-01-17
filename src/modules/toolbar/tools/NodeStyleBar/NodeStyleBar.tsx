@@ -11,9 +11,7 @@ import {
     selectNodeStylebar,
 } from '@app/slices/NodeStylebarSlice'
 
-type Props = {}
-
-function NodeStyleBar({}: Props) {
+function NodeStyleBar() {
     const nodeStylebarState = useAppSelector(selectNodeStylebar)
     const dispatch = useAppDispatch()
 

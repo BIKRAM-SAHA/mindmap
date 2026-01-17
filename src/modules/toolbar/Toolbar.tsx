@@ -3,9 +3,7 @@ import { topMiddleMenuTools, topRightMenuTools } from './Toolbar.constants'
 import { useAppSelector } from '@app/hooks'
 import { selectMindMapActiveNodeIdx } from '@app/slices/MindMapSlice'
 
-type Props = {}
-
-function Toolbar({}: Props) {
+function Toolbar() {
     const mindmapActiveNodeIdx = useAppSelector(selectMindMapActiveNodeIdx)
 
     return (

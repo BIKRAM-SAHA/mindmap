@@ -3,9 +3,7 @@ import { createPortal } from 'react-dom'
 import InfoModal from './components/Modal/InfoModal'
 import styles from './Info.module.css'
 
-type Props = {}
-
-function Info({}: Props) {
+function Info() {
     const [showModal, setShowModal] = useState(false)
 
     useEffect(() => {

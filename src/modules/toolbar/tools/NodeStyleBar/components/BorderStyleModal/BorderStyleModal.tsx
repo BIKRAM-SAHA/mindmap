@@ -9,9 +9,7 @@ import {
 } from '@app/slices/MindMapSlice'
 import { changeSelectedButton } from '@app/slices/NodeStylebarSlice'
 
-type Props = {}
-
-function BorderStyleModal({}: Props) {
+function BorderStyleModal() {
     const activeNode = useAppSelector(selectMindMapActiveNode)
     const dispatch = useAppDispatch()
 

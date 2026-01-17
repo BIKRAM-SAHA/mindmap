@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import Path from '../Path/Path'
 import styles from './Canvas.module.css'
 import BaseNode from '../BaseNode/BaseNode'
-import { CanvasProps as Props } from './Canvas.types'
 import {
     canvasHeight,
     canvasWidth,
@@ -27,7 +26,7 @@ import {
     selectMode,
 } from '@app/slices/MindMapSlice'
 
-function Canvas({}: Props) {
+function Canvas() {
     const dispatch = useAppDispatch()
     const activeNodeIdx = useAppSelector(selectMindMapActiveNodeIdx)
     const mindmapNodes = useAppSelector(selectMindMapNodes)
