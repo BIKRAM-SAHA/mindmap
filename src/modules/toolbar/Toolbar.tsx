@@ -1,12 +1,12 @@
 import styles from "./Toolbar.module.css";
 import { topMiddleMenuTools, topRightMenuTools } from "./Toolbar.constants";
 import { useAppSelector } from "@app/hooks";
-import { selectMindMapActiveNodeIdx } from "@app/slices/MindMapSlice";
+import { selectMindMapActiveNodeId } from "@app/slices/MindMapSlice";
 
 type Props = {};
 
 function Toolbar({}: Props) {
-	const mindmapActiveNodeIdx = useAppSelector(selectMindMapActiveNodeIdx);
+	const mindmapActiveNodeId = useAppSelector(selectMindMapActiveNodeId);
 
 	return (
 		<>
@@ -17,7 +17,7 @@ function Toolbar({}: Props) {
 					</div>
 				))}
 			</div>
-			{mindmapActiveNodeIdx && (
+			{mindmapActiveNodeId && (
 				<div className={[styles.topMiddleMenu, styles.menu].join(" ")}>
 					{topMiddleMenuTools.map((item, index) => (
 						<div key={index} className={styles.menuItem}>

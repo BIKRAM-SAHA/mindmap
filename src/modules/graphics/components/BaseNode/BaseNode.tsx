@@ -7,17 +7,17 @@ import {
 	changeMode,
 	onTextChange,
 	removeNode,
-	selectMindMapActiveNodeIdx,
+	selectMindMapActiveNodeId,
 	selectMode,
 } from "@app/slices/MindMapSlice";
 
 function BaseNode({ NodeData }: Props) {
-	const mindmapActivenodeIdx = useAppSelector(selectMindMapActiveNodeIdx);
+	const mindmapActiveNodeId = useAppSelector(selectMindMapActiveNodeId);
 	const mode = useAppSelector(selectMode);
 	const dispatch = useAppDispatch();
 
 	const editEnabled =
-		mode.type === "insert" && mode.nodeIdxBeingEdited === NodeData.id;
+		mode.type === "insert" && mode.nodeIdBeingEdited === NodeData.id;
 
 	const contentElemRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -26,7 +26,7 @@ function BaseNode({ NodeData }: Props) {
 			dispatch(
 				changeMode({
 					type: "insert",
-					nodeIdxBeingEdited: NodeData.id,
+					nodeIdBeingEdited: NodeData.id,
 				})
 			);
 		else
@@ -37,7 +37,7 @@ function BaseNode({ NodeData }: Props) {
 			);
 	};
 	const removeNodeIfEmpty = () => {
-		if (!NodeData.text.length && mindmapActivenodeIdx !== NodeData.id) {
+		if (!NodeData.text.length && mindmapActiveNodeId !== NodeData.id) {
 			dispatch(removeNode());
 		}
 	};
@@ -55,7 +55,7 @@ function BaseNode({ NodeData }: Props) {
 	}, [editEnabled]);
 	useEffect(() => {
 		removeNodeIfEmpty();
-	}, [mindmapActivenodeIdx]);
+	}, [mindmapActiveNodeId]);
 	return (
 		<div
 			draggable
@@ -63,7 +63,7 @@ function BaseNode({ NodeData }: Props) {
 				dispatch(changeActiveNode(NodeData.id));
 				e.dataTransfer.dropEffect = "move";
 			}}
-			data-isactive={mindmapActivenodeIdx === NodeData.id}
+			data-isactive={mindmapActiveNodeId === NodeData.id}
 			className={styles.baseNode}
 			onClick={(e) => {
 				e.stopPropagation();
