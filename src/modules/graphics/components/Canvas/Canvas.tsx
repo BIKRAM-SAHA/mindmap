@@ -20,7 +20,7 @@ import {
     goToPrevSibling,
     onMoveNode,
     removeNode,
-    selectMindMapActiveNodeIdx,
+    selectMindMapActiveNodeId,
     selectMindMapConnectors,
     selectMindMapNodes,
     selectMode,
@@ -28,7 +28,7 @@ import {
 
 function Canvas() {
     const dispatch = useAppDispatch()
-    const activeNodeIdx = useAppSelector(selectMindMapActiveNodeIdx)
+    const activeNodeId = useAppSelector(selectMindMapActiveNodeId)
     const mindmapNodes = useAppSelector(selectMindMapNodes)
     const mindmapConnectors = useAppSelector(selectMindMapConnectors)
     const mode = useAppSelector(selectMode)
@@ -93,12 +93,12 @@ function Canvas() {
                 case 'Enter':
                     if (e.shiftKey) handleAddSiblingNode()
                     else if (e.ctrlKey) handleAddChildNode()
-                    else if (activeNodeIdx !== null && mode.type === 'normal') {
+                    else if (activeNodeId !== null && mode.type === 'normal') {
                         e.preventDefault()
                         dispatch(
                             changeMode({
                                 type: 'insert',
-                                nodeIdxBeingEdited: activeNodeIdx,
+                                nodeIdBeingEdited: activeNodeId,
                             })
                         )
                     }
@@ -130,7 +130,7 @@ function Canvas() {
         }
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [mode, activeNodeIdx])
+    }, [mode, activeNodeId])
 
     return (
         <div
