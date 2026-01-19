@@ -6,33 +6,34 @@ export const commands = [
     },
     {
         title: 'Add child node',
-        keys: ['click', 'ctrl', 'enter'],
-        subTitle: 'Click on node then ctrl + enter to add child node',
+        keys: ['ctrl', 'enter'],
+        subTitle: 'With a node selected press ctrl + enter to add child node',
     },
     {
         title: 'Add sibling node',
-        keys: ['click', 'shift', 'enter'],
-        subTitle: 'Click on node then shift + enter to add sibling node',
+        keys: ['shift', 'enter'],
+        subTitle:
+            'With a node selected press shift + enter to add sibling node',
     },
     {
         title: 'Delete node',
-        keys: ['click', 'shift', 'delete'],
-        subTitle: 'Click on node then shift + delete to delete node',
+        keys: ['shift', 'delete'],
+        subTitle: 'With a node selected press shift + delete to delete node',
     },
     {
         title: 'Go to child node',
-        keys: ['click', 'j'],
-        subTitle: 'Select a node then `j` to go to child node',
+        keys: ['j'],
+        subTitle: 'With a node selected press `j` to go to child node',
     },
     {
         title: 'Go to parent node',
-        keys: ['click', 'k'],
-        subTitle: 'Select a node then `k` to go to parent node',
+        keys: ['k'],
+        subTitle: 'With a node selected press `k` to go to parent node',
     },
     {
         title: 'Traverse through sibling nodes',
-        keys: ['click', 'l | h'],
+        keys: ['l | h'],
         subTitle:
-            'Select a node then `l` or `h` to traverse through sibling nodes',
+            'With a node selected press `l` or `h` to traverse through sibling nodes',
     },
 ]

@@ -21,7 +21,7 @@
 .tooltip:hover::after {
     display: block;
     position: absolute;
-    top: -50%;
+    top: -25%;
     left: 0;
     width: 100%;
     content: attr(data-tooltip);
