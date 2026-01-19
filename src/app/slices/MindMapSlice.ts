@@ -3,10 +3,12 @@ import { centerX, centerY } from '@modules/graphics/common/index.constants'
 import { AbsolutePoint } from '@modules/graphics/common/index.types'
 import { RootState } from '@app/store'
 import { notifyError } from '@modules/notifications'
+import { v4 as uuid } from 'uuid'
+import graphDS from '@app/utils/graphDS'
 
 type Node = {
-    idx: number
-    parentIdx: null | number
+    id: string
+    parentId: null | string
     content: string
     meta: {
         position: AbsolutePoint
@@ -18,10 +20,10 @@ type Node = {
 }
 
 type mindmapSlice = {
-    activeNodeIdx: null | number
+    activeNodeId: null | string
     mode: Mode
     nodes: Node[]
-    childAdjacencyList: number[][]
+    childAdjacencyList: Record<string, string[]>
 }
 
 type Connector = {
@@ -36,18 +38,20 @@ type NORMAL_MODE = {
 
 type INSERT_MODE = {
     type: 'insert'
-    nodeIdxBeingEdited: number
+    nodeIdBeingEdited: string
 }
 
 type Mode = NORMAL_MODE | INSERT_MODE
 
+const ROOT_NODE_ID = uuid()
+
 const initialState: mindmapSlice = {
-    activeNodeIdx: 0,
+    activeNodeId: null,
     mode: { type: 'normal' },
     nodes: [
         {
-            idx: 0,
-            parentIdx: null,
+            id: ROOT_NODE_ID,
+            parentId: null,
             content: 'Root',
             meta: {
                 position: { x: centerX, y: centerY },
@@ -58,7 +62,7 @@ const initialState: mindmapSlice = {
             },
         },
     ],
-    childAdjacencyList: [[]],
+    childAdjacencyList: { [ROOT_NODE_ID]: [] },
 }
 
 const mindMapSlice = createSlice({
@@ -66,16 +70,15 @@ const mindMapSlice = createSlice({
     initialState,
     reducers: {
         addChild: (state) => {
-            const parentNodeIdx = state.activeNodeIdx
-            if (parentNodeIdx === null) {
+            const parentNodeId = state.activeNodeId
+            if (parentNodeId === null) {
                 notifyError('No Node Selected')
                 return
             }
-
-            const newNodeIdx = state.nodes.length
+            const newNodeId = uuid()
             state.nodes.push({
-                idx: newNodeIdx,
-                parentIdx: parentNodeIdx,
+                id: newNodeId,
+                parentId: parentNodeId,
                 content: 'New Node',
                 meta: {
                     position: { x: centerX, y: centerY },
@@ -85,43 +88,54 @@ const mindMapSlice = createSlice({
                     textColor: '#000000',
                 },
             })
-            state.childAdjacencyList.push([])
-            state.childAdjacencyList[parentNodeIdx].push(newNodeIdx)
-            state.activeNodeIdx = newNodeIdx
-            if (state.mode.type === 'insert')
-                state.mode.nodeIdxBeingEdited = newNodeIdx
+            state.childAdjacencyList[newNodeId] = []
+            state.childAdjacencyList[parentNodeId].push(newNodeId)
+            state.activeNodeId = newNodeId
         },
         removeNode: (state) => {
-            const nodeIdx = state.activeNodeIdx
-            if (nodeIdx === null) {
+            const nodeId = state.activeNodeId
+            if (nodeId === null) {
                 notifyError('No Node Selected')
                 return
             }
-            if (nodeIdx === 0) {
+            if (nodeId === state.nodes[0].id) {
                 notifyError('Cannot delete Root')
                 return
             }
-
-            state.nodes.splice(nodeIdx, 1)
-            state.childAdjacencyList.splice(nodeIdx, 1)
+            const node = state.nodes.find((node) => node.id === nodeId)
+            if (!node) {
+                throw new Error('Invalid Node Selected')
+            }
+            const parentNodeId = node.parentId
+            state.childAdjacencyList = graphDS.removeNode(
+                state.nodes,
+                state.childAdjacencyList,
+                nodeId
+            )
+            mindMapSlice.caseReducers.changeActiveNode(state, {
+                type: 'changeActiveNode',
+                payload: parentNodeId,
+            })
         },
         addSibling: (state) => {
-            const nodeIdx = state.activeNodeIdx
-            if (nodeIdx === null) {
+            const nodeId = state.activeNodeId
+            if (nodeId === null) {
                 notifyError('No Node Selected')
                 return
             }
-
-            const parentNodeIdx = state.nodes[nodeIdx].parentIdx
-            if (parentNodeIdx === null) {
+            const node = state.nodes.find((node) => node.id === nodeId)
+            if (!node) {
+                throw new Error('Invalid Node Selected')
+            }
+            const parentNodeId = node.parentId
+            if (parentNodeId === null) {
                 notifyError('Cannot add sibling for Root')
                 return
             }
-
-            const newNodeIdx = state.nodes.length
+            const newNodeId = uuid()
             state.nodes.push({
-                idx: newNodeIdx,
-                parentIdx: parentNodeIdx,
+                id: newNodeId,
+                parentId: parentNodeId,
                 content: 'New Node',
                 meta: {
                     position: { x: centerX, y: centerY },
@@ -131,156 +145,185 @@ const mindMapSlice = createSlice({
                     textColor: '#000000',
                 },
             })
-            state.childAdjacencyList.push([])
-            state.childAdjacencyList[parentNodeIdx].push(newNodeIdx)
-            state.activeNodeIdx = newNodeIdx
+            state.childAdjacencyList[newNodeId] = []
+            state.childAdjacencyList[parentNodeId].push(newNodeId)
+            state.activeNodeId = newNodeId
         },
-        changeActiveNode: (state, action: PayloadAction<number | null>) => {
-            const newActiveNode = action.payload
+        changeActiveNode: (state, action: PayloadAction<string | null>) => {
+            const newActiveNodeId = action.payload
             if (
-                newActiveNode !== null &&
-                (newActiveNode < 0 || newActiveNode > state.nodes.length)
+                newActiveNodeId !== null &&
+                !state.nodes.find((item) => item.id === newActiveNodeId)
             ) {
-                notifyError('Invalid node selected')
-                return
+                throw new Error('Invalid newActiveNodeId passed')
             }
 
-            state.activeNodeIdx = action.payload
+            state.activeNodeId = action.payload
         },
         goToNextSibling: (state) => {
-            const activeNodeIdx = state.activeNodeIdx
-            if (activeNodeIdx === null) {
+            const activeNodeId = state.activeNodeId
+            if (activeNodeId === null) {
                 notifyError('No Node Selected')
                 return
             }
-
-            const parentNodeIdx = state.nodes[activeNodeIdx].parentIdx
-            if (parentNodeIdx === null) {
+            const node = state.nodes.find((node) => node.id === activeNodeId)
+            if (!node) {
+                throw new Error('Invalid Node Selected')
+            }
+            const parentNodeId = node.parentId
+            if (parentNodeId === null) {
                 notifyError('Cannot go to sibling of Root')
                 return
             }
-            const activeNodePositionInAdjList =
-                state.childAdjacencyList[parentNodeIdx].findIndex(
-                    (item) => item === activeNodeIdx
-                ) || 0
-            const nextNodePositionInAdjList =
-                (activeNodePositionInAdjList + 1) %
-                state.childAdjacencyList[parentNodeIdx].length
-            const siblingNodeIdx =
-                state.childAdjacencyList[parentNodeIdx][
-                    nextNodePositionInAdjList
+            const totalChildren = state.childAdjacencyList[parentNodeId].length
+            const indexOfActiveChild = state.childAdjacencyList[
+                parentNodeId
+            ].findIndex((id) => id === activeNodeId)
+            if (indexOfActiveChild === -1) {
+                throw new Error('Active Node is not a child')
+            }
+            const siblingNodeId =
+                state.childAdjacencyList[parentNodeId][
+                    (indexOfActiveChild + 1) % totalChildren
                 ]
-            state.activeNodeIdx = siblingNodeIdx
+            state.activeNodeId = siblingNodeId
         },
         goToPrevSibling: (state) => {
-            const activeNodeIdx = state.activeNodeIdx
-            if (activeNodeIdx === null) {
+            const activeNodeId = state.activeNodeId
+            if (activeNodeId === null) {
                 notifyError('No Node Selected')
                 return
             }
-
-            const parentNodeIdx = state.nodes[activeNodeIdx].parentIdx
-            if (parentNodeIdx === null) {
+            const node = state.nodes.find((node) => node.id === activeNodeId)
+            if (!node) {
+                throw new Error('Invalid Node Selected')
+            }
+            const parentNodeId = node.parentId
+            if (parentNodeId === null) {
                 notifyError('Cannot go to sibling of Root')
                 return
             }
-            const activeNodePositionInAdjList =
-                state.childAdjacencyList[parentNodeIdx].findIndex(
-                    (item) => item === activeNodeIdx
-                ) || 0
-            const prevNodePositionInAdjList =
-                (activeNodePositionInAdjList +
-                    state.childAdjacencyList[parentNodeIdx].length -
-                    1) %
-                state.childAdjacencyList[parentNodeIdx].length
-            const siblingNodeIdx =
-                state.childAdjacencyList[parentNodeIdx][
-                    prevNodePositionInAdjList
+            const totalChildren = state.childAdjacencyList[parentNodeId].length
+            const indexOfActiveChild = state.childAdjacencyList[
+                parentNodeId
+            ].findIndex((id) => id === activeNodeId)
+            if (indexOfActiveChild === -1) {
+                throw new Error('Active Node is not a child')
+            }
+            const siblingNodeId =
+                state.childAdjacencyList[parentNodeId][
+                    (totalChildren + indexOfActiveChild - 1) % totalChildren
                 ]
-            state.activeNodeIdx = siblingNodeIdx
+            state.activeNodeId = siblingNodeId
         },
         goToParent: (state) => {
-            const activeNodeIdx = state.activeNodeIdx
-            if (activeNodeIdx === null) {
+            const activeNodeId = state.activeNodeId
+            if (activeNodeId === null) {
                 notifyError('No Node Selected')
                 return
             }
-
-            const parentNodeIdx = state.nodes[activeNodeIdx].parentIdx
-            if (parentNodeIdx === null) {
+            const node = state.nodes.find((node) => node.id === activeNodeId)
+            if (!node) {
+                throw new Error('Invalid Node Selected')
+            }
+            const parentNodeId = node.parentId
+            if (parentNodeId === null) {
                 notifyError('Cannot go to parent of Root')
                 return
             }
-            state.activeNodeIdx = parentNodeIdx
+            state.activeNodeId = parentNodeId
         },
         goToChild: (state) => {
-            const activeNodeIdx = state.activeNodeIdx
-            if (activeNodeIdx === null) {
+            const activeNodeId = state.activeNodeId
+            if (activeNodeId === null) {
                 notifyError('No Node Selected')
                 return
             }
 
-            const childNodeIdx =
-                state.childAdjacencyList[activeNodeIdx][0] ?? null
-            if (childNodeIdx === null) {
+            const childNodeId =
+                state.childAdjacencyList[activeNodeId][0] ?? null
+            if (childNodeId === null) {
                 notifyError('Cannot go to child of Leaf')
                 return
             }
-            state.activeNodeIdx = childNodeIdx
+            state.activeNodeId = childNodeId
         },
         onTextChange: (state, action: PayloadAction<string>) => {
-            const activeNodeIdx = state.activeNodeIdx
-            if (activeNodeIdx === null) {
+            const activeNodeId = state.activeNodeId
+            if (activeNodeId === null) {
                 notifyError('No Node Selected')
                 return
             }
+            const node = state.nodes.find((node) => node.id === activeNodeId)
+            if (!node) {
+                throw new Error('Invalid Node Selected')
+            }
 
-            state.nodes[activeNodeIdx].content = action.payload
+            node.content = action.payload
         },
         onMoveNode: (state, action: PayloadAction<AbsolutePoint>) => {
-            const activeNodeIdx = state.activeNodeIdx
-            if (activeNodeIdx === null) {
+            const activeNodeId = state.activeNodeId
+            if (activeNodeId === null) {
                 notifyError('No Node Selected')
                 return
             }
+            const node = state.nodes.find((node) => node.id === activeNodeId)
+            if (!node) {
+                throw new Error('Invalid Node Selected')
+            }
 
-            state.nodes[activeNodeIdx].meta.position = action.payload
+            node.meta.position = action.payload
         },
         onLineColorChange: (state, action: PayloadAction<string>) => {
-            const activeNodeIdx = state.activeNodeIdx
-            if (activeNodeIdx === null) {
+            const activeNodeId = state.activeNodeId
+            if (activeNodeId === null) {
                 notifyError('No Node Selected')
                 return
             }
+            const node = state.nodes.find((node) => node.id === activeNodeId)
+            if (!node) {
+                throw new Error('Invalid Node Selected')
+            }
 
-            state.nodes[activeNodeIdx].meta.lineColor = action.payload
+            node.meta.lineColor = action.payload
         },
         onLineWidthChange: (state, action: PayloadAction<number>) => {
-            const activeNodeIdx = state.activeNodeIdx
-            if (activeNodeIdx === null) {
+            const activeNodeId = state.activeNodeId
+            if (activeNodeId === null) {
                 notifyError('No Node Selected')
                 return
             }
+            const node = state.nodes.find((node) => node.id === activeNodeId)
+            if (!node) {
+                throw new Error('Invalid Node Selected')
+            }
 
-            state.nodes[activeNodeIdx].meta.lineWidth = action.payload
+            node.meta.lineWidth = action.payload
         },
         onFillColorChange: (state, action: PayloadAction<string>) => {
-            const activeNodeIdx = state.activeNodeIdx
-            if (activeNodeIdx === null) {
+            const activeNodeId = state.activeNodeId
+            if (activeNodeId === null) {
                 notifyError('No Node Selected')
                 return
             }
+            const node = state.nodes.find((node) => node.id === activeNodeId)
+            if (!node) {
+                throw new Error('Invalid Node Selected')
+            }
 
-            state.nodes[activeNodeIdx].meta.fillColor = action.payload
+            node.meta.fillColor = action.payload
         },
         onTextColorChange: (state, action: PayloadAction<string>) => {
-            const activeNodeIdx = state.activeNodeIdx
-            if (activeNodeIdx === null) {
+            const activeNodeId = state.activeNodeId
+            if (activeNodeId === null) {
                 notifyError('No Node Selected')
                 return
             }
-
-            state.nodes[activeNodeIdx].meta.textColor = action.payload
+            const node = state.nodes.find((node) => node.id === activeNodeId)
+            if (!node) {
+                throw new Error('Invalid Node Selected')
+            }
+            node.meta.textColor = action.payload
         },
         changeMode: (state, action: PayloadAction<Mode>) => {
             state.mode = action.payload
@@ -309,35 +352,37 @@ export const selectMindMap = (state: RootState) => state.mindmap
 export const selectMindMapNodes = (state: RootState) => state.mindmap.nodes
 export const selectMindMapChildAdjacencyList = (state: RootState) =>
     state.mindmap.childAdjacencyList
-export const selectMindMapActiveNodeIdx = (state: RootState) =>
-    state.mindmap.activeNodeIdx
+export const selectMindMapActiveNodeId = (state: RootState) =>
+    state.mindmap.activeNodeId
 export const selectMindMapActiveNode = (state: RootState) =>
-    state.mindmap.nodes.find((item) => item.idx === state.mindmap.activeNodeIdx)
+    state.mindmap.nodes.find((item) => item.id === state.mindmap.activeNodeId)
 export const selectMindMapConnectors = createSelector(
     [selectMindMapNodes, selectMindMapChildAdjacencyList],
     (nodes, childAdjacencyList) => {
-        const indexToNodeMap = new Map<number, Node>()
+        const indexToNodeMap = new Map<string, Node>()
         for (const node of nodes) {
-            indexToNodeMap.set(node.idx, node)
+            indexToNodeMap.set(node.id, node)
         }
         const connectors: Connector[] = []
-        childAdjacencyList.forEach((list, fromNodeIdx) => {
-            const fromNode = indexToNodeMap.get(fromNodeIdx)
+
+        Object.entries(childAdjacencyList).forEach(([fromNodeId, list]) => {
+            const fromNode = indexToNodeMap.get(fromNodeId)
             if (!fromNode)
                 throw new Error('Something went wrong in selecting connectors')
-            list.forEach((toNodeIdx) => {
-                const toNode = indexToNodeMap.get(toNodeIdx)
+            list.forEach((toNodeId) => {
+                const toNode = indexToNodeMap.get(toNodeId)
                 if (!toNode)
                     throw new Error(
                         'Something went wrong in selecting connectors'
                     )
                 connectors.push({
-                    id: fromNode.idx + '-' + toNode.idx,
+                    id: fromNode.id + '-' + toNode.id,
                     fromPosition: fromNode?.meta.position,
                     toPosition: toNode?.meta.position,
                 })
             })
         })
+
         return connectors
     }
 )

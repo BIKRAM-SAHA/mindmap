@@ -158,7 +158,7 @@ function Canvas() {
                 return (
                     <BaseNode
                         NodeData={{
-                            id: item.idx,
+                            id: item.id,
                             text: item.content,
                             position: {
                                 x: item.meta.position.x,
@@ -169,7 +169,7 @@ function Canvas() {
                             lineWidth: item.meta.lineWidth,
                             textColor: item.meta.textColor,
                         }}
-                        key={item.idx}
+                        key={item.id}
                     />
                 )
             })}

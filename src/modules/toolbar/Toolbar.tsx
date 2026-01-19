@@ -1,10 +1,10 @@
 import styles from './Toolbar.module.css'
 import { topMiddleMenuTools, topRightMenuTools } from './Toolbar.constants'
 import { useAppSelector } from '@app/hooks'
-import { selectMindMapActiveNodeIdx } from '@app/slices/MindMapSlice'
+import { selectMindMapActiveNodeId } from '@app/slices/MindMapSlice'
 
 function Toolbar() {
-    const mindmapActiveNodeIdx = useAppSelector(selectMindMapActiveNodeIdx)
+    const mindmapActiveNodeIdx = useAppSelector(selectMindMapActiveNodeId)
 
     return (
         <>

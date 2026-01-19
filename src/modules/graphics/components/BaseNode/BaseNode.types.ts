@@ -2,7 +2,7 @@ import { AbsolutePoint } from '@modules/graphics/common/index.types'
 
 export type BaseNodeElemProps = {
     NodeData: {
-        id: number
+        id: string
         text: string
         position: AbsolutePoint
         fillColor: string
