@@ -9,10 +9,13 @@
 
 # Pending feature list:
 
-- [ ] tidy the rendering of nodes
-- [ ] download the mindmap as png
+- [ ] persist mindmaps under user account
 - [ ] share the mindmap
+- [ ] pan and zoom
+- [ ] download the mindmap as png/pdf
+- [ ] tidy the rendering of nodes
 - [ ] UI/UX support for mobile screens
+- [ ] collaboration on shared mindmap
 
 # References:
 
