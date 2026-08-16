@@ -1,5 +1,9 @@
 import styles from './Toolbar.module.css'
-import { topMiddleMenuTools, topRightMenuTools } from './Toolbar.constants'
+import {
+    bottomRightMenuTools,
+    topMiddleMenuTools,
+    topRightMenuTools,
+} from './Toolbar.constants'
 import { useAppSelector } from '@app/hooks'
 import { selectMindMapActiveNodeId } from '@app/slices/MindMapSlice'
 
@@ -24,6 +28,13 @@ function Toolbar() {
                     ))}
                 </div>
             )}
+            <div className={[styles.bottomRightMenu, styles.menu].join(' ')}>
+                {bottomRightMenuTools.map((item, index) => (
+                    <div key={index} className={styles.menuItem}>
+                        <item.component />
+                    </div>
+                ))}
+            </div>
         </>
     )
 }

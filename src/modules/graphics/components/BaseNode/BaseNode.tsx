@@ -4,42 +4,37 @@ import styles from './BaseNode.module.css'
 import { useAppDispatch, useAppSelector } from '@app/hooks'
 import {
     changeActiveNode,
-    changeMode,
     onTextChange,
     removeNode,
     selectMindMapActiveNodeId,
-    selectMode,
 } from '@app/slices/MindMapSlice'
+import { changeKeyboardMode, selectKeyboardMode } from '@app/slices/ModeSlice'
 
 function BaseNode({ NodeData }: Props) {
     const mindmapActiveNodeId = useAppSelector(selectMindMapActiveNodeId)
-    const mode = useAppSelector(selectMode)
+    const keyboardMode = useAppSelector(selectKeyboardMode)
     const dispatch = useAppDispatch()
 
     const editEnabled =
-        mode.type === 'insert' && mode.nodeIdBeingEdited === NodeData.id
+        keyboardMode.type === 'insert' &&
+        keyboardMode.nodeIdBeingEdited === NodeData.id
 
     const contentElemRef = useRef<HTMLTextAreaElement | null>(null)
 
     const changeContentEditState = (value: boolean) => {
         if (value)
             dispatch(
-                changeMode({
+                changeKeyboardMode({
                     type: 'insert',
                     nodeIdBeingEdited: NodeData.id,
                 })
             )
         else
             dispatch(
-                changeMode({
+                changeKeyboardMode({
                     type: 'normal',
                 })
             )
-    }
-    const removeNodeIfEmpty = () => {
-        if (!NodeData.text.length && mindmapActiveNodeId !== NodeData.id) {
-            dispatch(removeNode())
-        }
     }
 
     const { y: ypos, x: xpos } = NodeData.position
@@ -54,8 +49,14 @@ function BaseNode({ NodeData }: Props) {
         }
     }, [editEnabled])
     useEffect(() => {
-        removeNodeIfEmpty()
-    }, [mindmapActiveNodeId])
+        //remove node if it's empty
+        if (
+            !NodeData.text.trim().length &&
+            mindmapActiveNodeId !== NodeData.id
+        ) {
+            dispatch(removeNode(NodeData.id))
+        }
+    }, [mindmapActiveNodeId, NodeData.text, NodeData.id, dispatch])
     return (
         <div
             draggable
@@ -76,7 +77,6 @@ function BaseNode({ NodeData }: Props) {
                 changeContentEditState(false)
             }}
             style={{
-                position: 'absolute',
                 transform: `translate(${xpos}px, ${ypos}px) translate(-50%,-50%)`,
                 backgroundColor: NodeData.fillColor,
                 borderColor: NodeData.lineColor,

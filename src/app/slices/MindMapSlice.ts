@@ -21,7 +21,6 @@ type Node = {
 
 type mindmapSlice = {
     activeNodeId: null | string
-    mode: Mode
     nodes: Node[]
     childAdjacencyList: Record<string, string[]>
 }
@@ -32,29 +31,20 @@ type Connector = {
     toPosition: AbsolutePoint
 }
 
-type NORMAL_MODE = {
-    type: 'normal'
-}
-
-type INSERT_MODE = {
-    type: 'insert'
-    nodeIdBeingEdited: string
-}
-
-type Mode = NORMAL_MODE | INSERT_MODE
-
 const ROOT_NODE_ID = uuid()
 
 const initialState: mindmapSlice = {
     activeNodeId: null,
-    mode: { type: 'normal' },
     nodes: [
         {
             id: ROOT_NODE_ID,
             parentId: null,
             content: 'Root',
             meta: {
-                position: { x: centerX, y: centerY },
+                position: {
+                    x: window.innerWidth / 2,
+                    y: window.innerHeight / 2,
+                },
                 fillColor: '#ffffff',
                 lineColor: '#000000',
                 lineWidth: 2,
@@ -81,7 +71,10 @@ const mindMapSlice = createSlice({
                 parentId: parentNodeId,
                 content: 'New Node',
                 meta: {
-                    position: { x: centerX, y: centerY },
+                    position: {
+                        x: window.innerWidth / 2,
+                        y: window.innerHeight / 2,
+                    },
                     fillColor: '#ffffff',
                     lineColor: '#000000',
                     lineWidth: 2,
@@ -92,8 +85,8 @@ const mindMapSlice = createSlice({
             state.childAdjacencyList[parentNodeId].push(newNodeId)
             state.activeNodeId = newNodeId
         },
-        removeNode: (state) => {
-            const nodeId = state.activeNodeId
+        removeNode: (state, action: PayloadAction<string | null>) => {
+            const nodeId = action.payload
             if (nodeId === null) {
                 notifyError('No Node Selected')
                 return
@@ -261,7 +254,10 @@ const mindMapSlice = createSlice({
 
             node.content = action.payload
         },
-        onMoveNode: (state, action: PayloadAction<AbsolutePoint>) => {
+        onMoveNode: (
+            state,
+            action: PayloadAction<{ dx: number; dy: number; zoom: number }>
+        ) => {
             const activeNodeId = state.activeNodeId
             if (activeNodeId === null) {
                 notifyError('No Node Selected')
@@ -272,7 +268,11 @@ const mindMapSlice = createSlice({
                 throw new Error('Invalid Node Selected')
             }
 
-            node.meta.position = action.payload
+            const { dx, dy, zoom } = action.payload
+            const { x: prevX, y: prevY } = node.meta.position
+            const newX = prevX + dx / zoom
+            const newY = prevY + dy / zoom
+            node.meta.position = { x: newX, y: newY }
         },
         onLineColorChange: (state, action: PayloadAction<string>) => {
             const activeNodeId = state.activeNodeId
@@ -325,9 +325,6 @@ const mindMapSlice = createSlice({
             }
             node.meta.textColor = action.payload
         },
-        changeMode: (state, action: PayloadAction<Mode>) => {
-            state.mode = action.payload
-        },
     },
 })
 
@@ -346,7 +343,6 @@ export const {
     onTextChange,
     onTextColorChange,
     removeNode,
-    changeMode,
 } = mindMapSlice.actions
 export const selectMindMap = (state: RootState) => state.mindmap
 export const selectMindMapNodes = (state: RootState) => state.mindmap.nodes
@@ -386,5 +382,4 @@ export const selectMindMapConnectors = createSelector(
         return connectors
     }
 )
-export const selectMode = (state: RootState) => state.mindmap.mode
 export const mindmapReducer = mindMapSlice.reducer

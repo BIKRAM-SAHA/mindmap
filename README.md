@@ -9,10 +9,13 @@
 
 # Pending feature list:
 
+- [x] pan
+- [x] zoom
+- [ ] `ctrl + scroll` to zoom
+- [ ] `ctrl + drag` to pan
 - [ ] persist mindmaps under user account
-- [ ] share the mindmap
-- [ ] pan and zoom
 - [ ] download the mindmap as png/pdf
+- [ ] share the mindmap
 - [ ] tidy the rendering of nodes
 - [ ] UI/UX support for mobile screens
 - [ ] collaboration on shared mindmap

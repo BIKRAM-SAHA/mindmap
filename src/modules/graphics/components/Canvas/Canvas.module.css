@@ -1,6 +1,12 @@
-.canvasRoot {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
+.viewport {
+    position: fixed;
+    inset: 0;
     background-color: grey;
+    overflow: hidden;
+}
+.world {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform-origin: 0 0;
 }
