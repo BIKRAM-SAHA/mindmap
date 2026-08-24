@@ -1,5 +1,4 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { centerX, centerY } from '@modules/graphics/common/index.constants'
 import { AbsolutePoint } from '@modules/graphics/common/index.types'
 import { RootState } from '@app/store'
 import { notifyError } from '@modules/notifications'
@@ -131,7 +130,10 @@ const mindMapSlice = createSlice({
                 parentId: parentNodeId,
                 content: 'New Node',
                 meta: {
-                    position: { x: centerX, y: centerY },
+                    position: {
+                        x: window.innerWidth / 2,
+                        y: window.innerHeight / 2,
+                    },
                     fillColor: '#ffffff',
                     lineColor: '#000000',
                     lineWidth: 2,
