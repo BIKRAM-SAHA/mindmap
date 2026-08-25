@@ -1,26 +1,62 @@
-import { useAppDispatch, useAppSelector } from '@app/hooks'
-import { changeMouseMode, selectMouseMode } from '@app/slices/ModeSlice'
+import { useAppDispatch } from '@app/hooks'
+import { changeMouseMode } from '@app/slices/ModeSlice'
+import { useEffect, useState } from 'react'
+
+type Options = 'SELECT' | 'PAN'
+type Button = {
+    value: Options
+    label: string
+    onClick: () => void
+}
 
 function Pan() {
-    const mouseMode = useAppSelector(selectMouseMode)
-    const dispath = useAppDispatch()
+    const [mouseMode, setMouseMode] = useState<Options>('SELECT')
+    const dispatch = useAppDispatch()
 
-    const buttons = [
+    const buttons: Button[] = [
         {
             value: 'SELECT',
             label: 'Select',
             onClick: () => {
-                dispath(changeMouseMode('SELECT'))
+                setMouseMode('SELECT')
+                dispatch(changeMouseMode('SELECT'))
             },
         },
         {
             value: 'PAN',
             label: 'Pan',
             onClick: () => {
-                dispath(changeMouseMode('PAN'))
+                setMouseMode('PAN')
+                dispatch(changeMouseMode('PAN'))
             },
         },
     ]
+
+    useEffect(() => {
+        //handle key events
+        const handleKeyDown = (e: KeyboardEvent) => {
+            switch (e.key) {
+                case 'Control':
+                    if (mouseMode !== 'SELECT') return
+                    dispatch(changeMouseMode('PAN'))
+                    break
+            }
+        }
+        const handleKeyUp = (e: KeyboardEvent) => {
+            switch (e.key) {
+                case 'Control':
+                    if (mouseMode !== 'SELECT') return
+                    dispatch(changeMouseMode('SELECT'))
+                    break
+            }
+        }
+        window.addEventListener('keydown', handleKeyDown)
+        window.addEventListener('keyup', handleKeyUp)
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+            window.removeEventListener('keyup', handleKeyUp)
+        }
+    }, [mouseMode])
 
     return (
         <div>

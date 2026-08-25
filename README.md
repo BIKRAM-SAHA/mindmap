@@ -11,8 +11,8 @@
 
 - [x] pan
 - [x] zoom
-- [ ] `ctrl + scroll` to zoom
-- [ ] `ctrl + drag` to pan
+- [x] `ctrl + scroll` to zoom
+- [x] `ctrl + drag` to pan
 - [ ] persist mindmaps under user account
 - [ ] download the mindmap as png/pdf
 - [ ] share the mindmap

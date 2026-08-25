@@ -34,7 +34,9 @@ import {
     selectPanY,
     selectScale,
     startPan,
+    zoom,
 } from '@app/slices/ViewportSlice'
+import { ZOOM_STEP } from '@modules/common'
 
 function Canvas() {
     const dispatch = useAppDispatch()
@@ -113,7 +115,7 @@ function Canvas() {
     }
 
     useEffect(() => {
-        //handle pan for mindmap
+        //handle mouse events
         const handleMouseDown = (e: MouseEvent) => {
             if (mouseMode !== 'PAN') return
             previousMouse.current = {
@@ -142,17 +144,32 @@ function Canvas() {
             }
             dispatch(endPan())
         }
+        const onWheel = (e: WheelEvent) => {
+            if (!e.ctrlKey) return
+            e.preventDefault()
+            dispatch(
+                zoom({
+                    scale:
+                        scale +
+                        ZOOM_STEP * -1 * (e.deltaY / Math.abs(e.deltaY)),
+                    mouseX: e.clientX,
+                    mouseY: e.clientY,
+                })
+            )
+        }
         window.addEventListener('mousedown', handleMouseDown)
         window.addEventListener('mousemove', handleMouseMove)
         window.addEventListener('mouseup', handleMouseUp)
+        window.addEventListener('wheel', onWheel, { passive: false })
         return () => {
             window.removeEventListener('mousedown', handleMouseDown)
             window.removeEventListener('mousemove', handleMouseMove)
             window.removeEventListener('mouseup', handleMouseUp)
+            window.removeEventListener('wheel', onWheel)
         }
     }, [mouseMode, isPanActive, scale, dispatch])
     useEffect(() => {
-        //handle keybindings for mindmap
+        //handle key events
         const handleKeyDown = (e: KeyboardEvent) => {
             switch (e.key) {
                 case 'Escape':
@@ -202,8 +219,10 @@ function Canvas() {
             }
         }
         window.addEventListener('keydown', handleKeyDown)
-        return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [keyboardMode, activeNodeId])
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+        }
+    }, [keyboardMode, activeNodeId, isPanActive])
 
     return (
         <div

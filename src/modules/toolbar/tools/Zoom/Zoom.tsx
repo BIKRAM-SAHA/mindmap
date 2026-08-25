@@ -1,7 +1,6 @@
 import { useAppDispatch, useAppSelector } from '@app/hooks'
 import { selectScale, zoom } from '@app/slices/ViewportSlice'
-
-const STEP = 100
+import { ZOOM_STEP } from '@modules/common'
 
 function Zoom() {
     const scale = useAppSelector(selectScale)
@@ -10,7 +9,7 @@ function Zoom() {
     const incrementByStep = () => {
         dispatch(
             zoom({
-                scale: scale + STEP,
+                scale: scale + ZOOM_STEP,
                 mouseX: window.innerWidth / 2,
                 mouseY: window.innerHeight / 2,
             })
@@ -19,7 +18,7 @@ function Zoom() {
     const decrementByStep = () => {
         dispatch(
             zoom({
-                scale: scale - STEP,
+                scale: scale - ZOOM_STEP,
                 mouseX: window.innerWidth / 2,
                 mouseY: window.innerHeight / 2,
             })
