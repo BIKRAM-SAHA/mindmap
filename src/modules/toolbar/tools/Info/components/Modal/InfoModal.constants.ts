@@ -1,5 +1,15 @@
 export const commands = [
     {
+        title: 'Zoom',
+        keys: ['ctrl', 'wheel scroll'],
+        subTitle: 'Press ctrl and scroll mouse wheel to zoom',
+    },
+    {
+        title: 'Pan',
+        keys: ['ctrl', 'drag'],
+        subTitle: 'Press ctrl and drag on screen to pan',
+    },
+    {
         title: 'Select node',
         keys: ['click'],
         subTitle: 'Click on node to select it',
